@@ -6,6 +6,20 @@
 
 This repository contains the declarative configuration for all applications and infrastructure components deployed to Kubernetes clusters running Confluent Platform. It implements the **App of Apps** pattern for managing Argo CD applications.
 
+## New to This Repository?
+
+Choose your adoption path based on your goals:
+
+| Path | When to Use | Guide |
+|------|------------|-------|
+| 🚀 **Quick Start** | First time, want hands-on learning | [Getting Started for the Uninitiated](docs/getting-started-for-the-uninitiated.md) |
+| 📚 **Strategic Overview** | Understand options before diving in | [Adoption Guide](docs/adoption-guide.md) |
+| 🏗️ **Deploy to Cluster** | Have existing Kubernetes cluster | [Cluster Onboarding](docs/cluster-onboarding.md) |
+| 🔧 **Customize** | Adapt infrastructure or workloads | [Adoption Guide - Customization](docs/adoption-guide.md#path-3-customize-infrastructure-components) |
+| 🍴 **Fork** | Organization-specific requirements | [Adoption Guide - Fork Guide](docs/adoption-guide.md#path-5-fork-customization-guide) |
+
+**Already familiar with the repository?** Continue to [Quick Start](#quick-start) below.
+
 ## Quicker Start
 
 If you don't understand what any of this means and want the fastest, most handheld path to getting up and running, follow the [Getting Started for the Unitiated](docs/getting-started-for-the-uninitiated.md) guide.

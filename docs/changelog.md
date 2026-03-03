@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Adoption guide for repository usage and fork customization** ([#15](https://github.com/osowski/confluent-platform-gitops/issues/15))
+  - New `docs/adoption-guide.md` provides strategic routing hub for users adopting this repository
+  - Five adoption paths: local development, deploy to cluster, customize infrastructure, add/modify workloads, fork customization
+  - Cross-references existing detailed guides without content duplication
 - **PodMonitor for CFK components in confluent-resources** ([#37](https://github.com/osowski/confluent-platform-gitops/issues/37))
   - Added `PodMonitor` resource to enable Prometheus metrics scraping from all Confluent for Kubernetes (CFK) managed components
   - Single `PodMonitor` covers Kafka, KRaft Controller, Schema Registry, Connect, and Control Center via `confluent-platform` label selector
