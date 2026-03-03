@@ -62,6 +62,7 @@ Requirements:
   - yq (install with: brew install yq)
   - kubectl (install with: brew install kubectl)
   - helm (install with: brew install helm)
+  - jq (install with: brew install jq) - optional, improves Helm validation
 
 Examples:
   # Validate flink-demo cluster
@@ -244,15 +245,47 @@ validate_helm_templates() {
             fi
         done < <(yq eval '.spec.sources[] | select(.helm != null) | .helm.valueFiles[]?' "$app_file" 2>/dev/null || true)
 
-        # Try to render template
-        debug "Rendering: helm template $app_name $chart_repo/$chart_name --version $chart_version ${value_files[*]}"
+        # Determine how to render based on repository type
+        local helm_succeeded=false
 
-        if ! helm template "$app_name" oci://packages.confluent.io/helm/"$chart_name" --version "$chart_version" "${value_files[@]}" > /dev/null 2>&1; then
-            # Try without OCI prefix for non-Confluent repos
-            if ! helm template "$app_name" "$chart_name" --repo "$chart_repo" --version "$chart_version" "${value_files[@]}" > /dev/null 2>&1; then
-                warning "Helm template rendering skipped for $app_name (chart may not be cached locally)"
-                if [ "$VERBOSE" = true ]; then
-                    echo "    Run: helm repo add <name> $chart_repo && helm repo update"
+        if [[ "$chart_repo" == oci://* ]]; then
+            # OCI registry - use direct OCI reference
+            debug "Rendering OCI chart: helm template $app_name $chart_repo --version $chart_version ${value_files[*]}"
+            if helm template "$app_name" "$chart_repo" --version "$chart_version" "${value_files[@]}" > /dev/null 2>&1; then
+                helm_succeeded=true
+            fi
+        else
+            # HTTP repository - query helm repo list to find the alias for this URL
+            local repo_alias=""
+            if command -v jq &> /dev/null && helm repo list -o json &> /dev/null; then
+                # Try exact URL match first
+                repo_alias=$(helm repo list -o json 2>/dev/null | jq -r --arg url "$chart_repo" '.[] | select(.url == $url) | .name' | head -1)
+
+                # If no exact match, try with trailing slash normalization
+                if [ -z "$repo_alias" ]; then
+                    local normalized_url="${chart_repo%/}"  # Remove trailing slash if present
+                    repo_alias=$(helm repo list -o json 2>/dev/null | jq -r --arg url "$normalized_url" '.[] | select(.url == $url or .url == ($url + "/")) | .name' | head -1)
+                fi
+            fi
+
+            if [ -n "$repo_alias" ]; then
+                debug "Rendering HTTP chart: helm template $app_name $repo_alias/$chart_name --version $chart_version ${value_files[*]}"
+                if helm template "$app_name" "$repo_alias/$chart_name" --version "$chart_version" "${value_files[@]}" > /dev/null 2>&1; then
+                    helm_succeeded=true
+                fi
+            else
+                debug "No helm repo configured for URL: $chart_repo"
+            fi
+        fi
+
+        if [ "$helm_succeeded" = false ]; then
+            warning "Helm template rendering skipped for $app_name (chart not available locally)"
+            if [ "$VERBOSE" = true ]; then
+                if [[ "$chart_repo" == oci://* ]]; then
+                    echo "    Note: OCI charts are pulled automatically on first use"
+                    echo "    Run manually: helm template $app_name $chart_repo --version $chart_version"
+                else
+                    echo "    Add repository: helm repo add <alias> $chart_repo && helm repo update"
                 fi
             fi
         fi
