@@ -298,7 +298,29 @@ The following automation scripts would streamline common adoption tasks. These a
 
 ### High Priority Scripts
 
+<<<<<<< HEAD
 #### 1. `scripts/validate-cluster.sh` - Comprehensive Validation Suite
+=======
+#### 1. `scripts/update-repo-urls.sh` - Replace Repository URLs for Forks
+**Problem:** After forking, all ArgoCD Application manifests reference the upstream repository URL
+
+**Solution:** Automated find-and-replace across all cluster manifests
+
+**Usage:**
+```bash
+./scripts/update-repo-urls.sh https://github.com/myorg/confluent-platform-gitops
+```
+
+**What it would do:**
+- Find all `repoURL` entries in `clusters/` manifests
+- Replace upstream URL with provided fork URL
+- Validate YAML syntax after replacement
+- Show diff and require confirmation before committing
+
+**Tracking:** [GitHub Issue #44](https://github.com/osowski/confluent-platform-gitops/issues/44)
+
+#### 2. `scripts/validate-cluster.sh` - Comprehensive Validation Suite
+>>>>>>> origin/main
 **Problem:** Pre-deployment validation requires manual checks across multiple tools
 
 **Solution:** Automated validation of manifests, values, and configuration
@@ -319,7 +341,11 @@ The following automation scripts would streamline common adoption tasks. These a
 
 **Tracking:** [GitHub Issue #45](https://github.com/osowski/confluent-platform-gitops/issues/45)
 
+<<<<<<< HEAD
 #### 2. `scripts/new-application.sh` - Scaffold Application Structure
+=======
+#### 3. `scripts/new-application.sh` - Scaffold Application Structure
+>>>>>>> origin/main
 **Problem:** Creating base + overlay structure for new applications is repetitive
 
 **Solution:** Generate application scaffolding with best practices
@@ -342,21 +368,21 @@ The following automation scripts would streamline common adoption tasks. These a
 
 ### Medium Priority Scripts
 
-#### 3. `scripts/test-local.sh` - Automated Local Deployment
+#### 4. `scripts/test-local.sh` - Automated Local Deployment
 **Usage:** `./scripts/test-local.sh [cluster-name]`
 
 **What it would do:** Automate full local deployment flow (Colima start, KIND cluster creation, ArgoCD install, bootstrap apply, wait for sync)
 
 **Tracking:** [GitHub Issue #47](https://github.com/osowski/confluent-platform-gitops/issues/47)
 
-#### 4. `scripts/diff-versions.sh` - Compare Configuration Versions
+#### 5. `scripts/diff-versions.sh` - Compare Configuration Versions
 **Usage:** `./scripts/diff-versions.sh v0.3.0 v0.4.0`
 
 **What it would do:** Show configuration changes between releases or commits (application additions, value changes, version upgrades)
 
 **Tracking:** [GitHub Issue #48](https://github.com/osowski/confluent-platform-gitops/issues/48)
 
-#### 5. `Makefile` - Common Task Shortcuts
+#### 6. `Makefile` - Common Task Shortcuts
 **Usage:** `make validate`, `make test-local`, `make new-cluster`
 
 **What it would do:** Provide task runner with common targets (wraps scripts above, adds convenience targets)
@@ -365,12 +391,12 @@ The following automation scripts would streamline common adoption tasks. These a
 
 ### Low Priority Enhancements
 
-#### 6. Pre-commit Hooks
+#### 7. Pre-commit Hooks
 **What it would do:** Run validation on `git commit` (YAML syntax, secret scanning, kustomize build)
 
 **Tracking:** [GitHub Issue #50](https://github.com/osowski/confluent-platform-gitops/issues/50)
 
-#### 7. GitHub Actions Workflows
+#### 8. GitHub Actions Workflows
 **What it would do:** Automated PR validation, release automation, E2E testing in CI/CD
 
 **Tracking:** [GitHub Issue #51](https://github.com/osowski/confluent-platform-gitops/issues/51)
