@@ -18,7 +18,7 @@ Choose your adoption path based on your goals:
 | 🔧 **Customize** | Adapt infrastructure or workloads | [Adoption Guide - Customization](docs/adoption-guide.md#path-3-customize-infrastructure-components) |
 | 🍴 **Fork** | Organization-specific requirements | [Adoption Guide - Fork Guide](docs/adoption-guide.md#path-5-fork-customization-guide) |
 
-**Already familiar with the repository?** Continue to Quick Start below.
+**Already familiar with the repository?** Continue to [Quick Start](#quick-start) below.
 
 ## Quicker Start
 
