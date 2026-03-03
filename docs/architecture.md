@@ -303,7 +303,7 @@ sources:
       valueFiles:
         - $values/infrastructure/traefik/base/values.yaml
         - $values/infrastructure/traefik/overlays/flink-demo/values.yaml
-  - repoURL: https://github.com/osowski/confluent-platform-gitops
+  - repoURL: https://github.com/jbcodeforce/confluent-platform-gitops
     targetRevision: HEAD
     ref: values
 ```

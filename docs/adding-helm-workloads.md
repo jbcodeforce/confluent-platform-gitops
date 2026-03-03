@@ -115,8 +115,8 @@ spec:
     chart: <chart-name>
     helm:
       valueFiles:
-        - https://raw.githubusercontent.com/osowski/confluent-platform-gitops/HEAD/infrastructure/<app-name>/base/values.yaml
-        - https://raw.githubusercontent.com/osowski/confluent-platform-gitops/HEAD/infrastructure/<app-name>/overlays/<cluster-name>/values.yaml
+        - https://raw.githubusercontent.com/jbcodeforce/confluent-platform-gitops/HEAD/infrastructure/<app-name>/base/values.yaml
+        - https://raw.githubusercontent.com/jbcodeforce/confluent-platform-gitops/HEAD/infrastructure/<app-name>/overlays/<cluster-name>/values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: <namespace>
@@ -295,8 +295,8 @@ spec:
     chart: cert-manager
     helm:
       valueFiles:
-        - https://raw.githubusercontent.com/osowski/confluent-platform-gitops/HEAD/infrastructure/cert-manager/base/values.yaml
-        - https://raw.githubusercontent.com/osowski/confluent-platform-gitops/HEAD/infrastructure/cert-manager/overlays/flink-demo/values.yaml
+        - https://raw.githubusercontent.com/jbcodeforce/confluent-platform-gitops/HEAD/infrastructure/cert-manager/base/values.yaml
+        - https://raw.githubusercontent.com/jbcodeforce/confluent-platform-gitops/HEAD/infrastructure/cert-manager/overlays/flink-demo/values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: cert-manager
@@ -528,8 +528,8 @@ spec:
     chart: grafana
     helm:
       valueFiles:
-        - https://raw.githubusercontent.com/osowski/confluent-platform-gitops/HEAD/workloads/grafana/base/values.yaml
-        - https://raw.githubusercontent.com/osowski/confluent-platform-gitops/HEAD/workloads/grafana/overlays/flink-demo/values.yaml
+        - https://raw.githubusercontent.com/jbcodeforce/confluent-platform-gitops/HEAD/workloads/grafana/base/values.yaml
+        - https://raw.githubusercontent.com/jbcodeforce/confluent-platform-gitops/HEAD/workloads/grafana/overlays/flink-demo/values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: monitoring
@@ -1258,7 +1258,7 @@ podAnnotations:
 - [Adding Applications (General)](adding-applications.md) - Kustomize and Helm overview
 - [Bootstrap Procedure](bootstrap-procedure.md) - Initial cluster setup
 - [Cluster Onboarding](cluster-onboarding.md) - Adding new clusters
-- [Code Review Checklist](https://github.com/osowski/homelab-ansible/blob/main/docs/code_review_checklist.md) - Pre-PR validation
+- [Code Review Checklist](https://github.com/jbcodeforce/homelab-ansible/blob/main/docs/code_review_checklist.md) - Pre-PR validation
 
 ---
 

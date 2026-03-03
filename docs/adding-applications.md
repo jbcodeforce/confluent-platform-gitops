@@ -206,7 +206,7 @@ metadata:
 spec:
   project: workloads
   source:
-    repoURL: https://github.com/osowski/confluent-platform-gitops.git
+    repoURL: https://github.com/jbcodeforce/confluent-platform-gitops.git
     targetRevision: HEAD
     path: workloads/<app-name>/overlays/<cluster-name>
   destination:
@@ -315,7 +315,7 @@ spec:
       valueFiles:
         - $values/infrastructure/<app-name>/base/values.yaml
         - $values/infrastructure/<app-name>/overlays/<cluster-name>/values.yaml
-  - repoURL: https://github.com/osowski/confluent-platform-gitops
+  - repoURL: https://github.com/jbcodeforce/confluent-platform-gitops
     targetRevision: HEAD
     ref: values
   destination:

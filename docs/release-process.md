@@ -231,7 +231,7 @@ By default, the bootstrap Application in `clusters/<cluster>/bootstrap.yaml` tra
 ```yaml
 spec:
   source:
-    repoURL: https://github.com/osowski/confluent-platform-gitops.git
+    repoURL: https://github.com/jbcodeforce/confluent-platform-gitops.git
     targetRevision: HEAD
     path: bootstrap
     helm:
@@ -252,7 +252,7 @@ To deploy a known-good version, update both `targetRevision` fields in the boots
 ```yaml
 spec:
   source:
-    repoURL: https://github.com/osowski/confluent-platform-gitops.git
+    repoURL: https://github.com/jbcodeforce/confluent-platform-gitops.git
     targetRevision: v0.2.0
     path: bootstrap
     helm:

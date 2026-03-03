@@ -113,4 +113,4 @@ We will use the **App of Apps pattern** with the following structure:
 - [ArgoCD App of Apps Pattern Documentation](https://argo-cd.readthedocs.io/en/stable/operator-manual/cluster-bootstrapping/)
 - [Architecture Documentation](../docs/architecture.md)
 - [Bootstrap Procedure](../docs/bootstrap-procedure.md)
-- [GitHub Issue #2](https://github.com/osowski/homelab-argocd/issues/2)
+- [GitHub Issue #2](https://github.com/jbcodeforce/homelab-argocd/issues/2)

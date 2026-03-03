@@ -17,7 +17,7 @@ spec:
         valueFiles:
           - $values/workloads/cmf-operator/base/values.yaml
           - $values/workloads/cmf-operator/overlays/flink-demo/values.yaml
-    - repoURL: https://github.com/osowski/confluent-platform-gitops.git
+    - repoURL: https://github.com/jbcodeforce/confluent-platform-gitops.git
       targetRevision: HEAD
       ref: values
   destination:

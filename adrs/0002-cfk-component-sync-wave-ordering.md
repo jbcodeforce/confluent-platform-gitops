@@ -93,5 +93,5 @@ Each health check evaluates `obj.status.state`:
 - [ArgoCD Sync Waves Documentation](https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/)
 - [ArgoCD Custom Health Checks](https://argo-cd.readthedocs.io/en/stable/operator-manual/health/)
 - [Confluent for Kubernetes Documentation](https://docs.confluent.io/operator/current/overview.html)
-- [GitHub Issue #3](https://github.com/osowski/confluent-platform-gitops/issues/3)
+- [GitHub Issue #3](https://github.com/jbcodeforce/confluent-platform-gitops/issues/3)
 - [Architecture Documentation](../docs/architecture.md)

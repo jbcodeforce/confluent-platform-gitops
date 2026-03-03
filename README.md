@@ -29,7 +29,7 @@ If you have experience with GitOps or want to understand how the inner workings 
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/osowski/confluent-platform-gitops.git
+   git clone https://github.com/jbcodeforce/confluent-platform-gitops.git
    cd confluent-platform-gitops
    git checkout <latest-tagged-version>
    ```
@@ -176,4 +176,4 @@ confluent-platform-gitops/
 
 ## Related Repositories
 
-Migrated from [homelab-argocd](https://github.com/osowski/homelab-argocd) repository to focus specifically on Confluent Platform deployments.
+Migrated from [homelab-argocd](https://github.com/jbcodeforce/homelab-argocd) repository to focus specifically on Confluent Platform deployments.

@@ -82,7 +82,7 @@ Only load task-specific docs when needed. This file is intentionally concise —
 
 ### Security - MUST FOLLOW
 
-Security rules are detailed in the [Code Review Checklist](./docs/code_review_checklist.md) and [confluent-platform-gitops security guidelines](https://github.com/osowski/confluent-platform-gitops/blob/main/docs/guides/code-review-checklist.md). Key principles:
+Security rules are detailed in the [Code Review Checklist](./docs/code_review_checklist.md) and [confluent-platform-gitops security guidelines](https://github.com/jbcodeforce/confluent-platform-gitops/blob/main/docs/guides/code-review-checklist.md). Key principles:
 
 - NEVER expose API keys or tokens
 - ALWAYS manage secrets externally (not committed to this repository)

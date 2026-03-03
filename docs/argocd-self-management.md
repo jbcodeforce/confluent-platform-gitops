@@ -174,7 +174,7 @@ spec:
         valueFiles:
           - $values/infrastructure/argocd/base/values.yaml
           - $values/infrastructure/argocd/overlays/<cluster>/values.yaml
-    - repoURL: https://github.com/osowski/confluent-platform-gitops
+    - repoURL: https://github.com/jbcodeforce/confluent-platform-gitops
       targetRevision: HEAD
       ref: values
   destination:

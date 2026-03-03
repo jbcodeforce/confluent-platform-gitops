@@ -30,7 +30,7 @@ Expected output: All ArgoCD pods in `Running` state.
 Clone this repository:
 
 ```bash
-git clone https://github.com/osowski/confluent-platform-gitops.git
+git clone https://github.com/jbcodeforce/confluent-platform-gitops.git
 cd confluent-platform-gitops
 ```
 
@@ -55,7 +55,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/osowski/confluent-platform-gitops.git
+    repoURL: https://github.com/jbcodeforce/confluent-platform-gitops.git
     targetRevision: HEAD
     path: bootstrap
     helm:
@@ -317,13 +317,13 @@ Once the argocd-ingress Application is synced, access ArgoCD at the configured h
 2. Check ArgoCD can reach GitHub:
    ```bash
    kubectl exec -n argocd <argocd-server-pod> -- \
-     curl -I https://github.com/osowski/confluent-platform-gitops.git
+     curl -I https://github.com/jbcodeforce/confluent-platform-gitops.git
    ```
 
 3. If using private repo, configure credentials:
    ```bash
    kubectl create secret generic repo-credentials -n argocd \
-     --from-literal=url=https://github.com/osowski/confluent-platform-gitops.git \
+     --from-literal=url=https://github.com/jbcodeforce/confluent-platform-gitops.git \
      --from-literal=password=<token> \
      --from-literal=username=<username>
    ```
@@ -360,7 +360,7 @@ To deploy a known-good release instead of tracking `HEAD`, set `targetRevision` 
 ```yaml
 spec:
   source:
-    repoURL: https://github.com/osowski/confluent-platform-gitops.git
+    repoURL: https://github.com/jbcodeforce/confluent-platform-gitops.git
     targetRevision: v0.2.0
     path: bootstrap
 ```

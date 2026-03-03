@@ -100,7 +100,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/osowski/confluent-platform-gitops.git
+    repoURL: https://github.com/jbcodeforce/confluent-platform-gitops.git
     targetRevision: HEAD
     path: bootstrap
     helm:

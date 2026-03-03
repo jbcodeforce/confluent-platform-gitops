@@ -78,7 +78,7 @@ We will use **Git tags** for release versioning with the following approach:
 ## References
 
 - [Release Process Documentation](../docs/release-process.md)
-- [GitHub Issue #7](https://github.com/osowski/confluent-platform-gitops/issues/7)
+- [GitHub Issue #7](https://github.com/jbcodeforce/confluent-platform-gitops/issues/7)
 - [ADR-0001: App of Apps Pattern](0001-app-of-apps-pattern.md)
 - [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 - [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)

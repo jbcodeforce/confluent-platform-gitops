@@ -129,9 +129,9 @@ yq eval '.' infrastructure/kube-prometheus-stack/overlays/portcullis/values.yaml
 # Verify value files are accessible via raw GitHub URLs
 # (Requires files to be committed and pushed)
 
-curl -fsSL https://raw.githubusercontent.com/osowski/homelab-argocd/HEAD/infrastructure/kube-prometheus-stack/base/values.yaml
+curl -fsSL https://raw.githubusercontent.com/jbcodeforce/homelab-argocd/HEAD/infrastructure/kube-prometheus-stack/base/values.yaml
 
-curl -fsSL https://raw.githubusercontent.com/osowski/homelab-argocd/HEAD/infrastructure/kube-prometheus-stack/overlays/portcullis/values.yaml
+curl -fsSL https://raw.githubusercontent.com/jbcodeforce/homelab-argocd/HEAD/infrastructure/kube-prometheus-stack/overlays/portcullis/values.yaml
 ```
 
 ### 10. Check Resource Requirements
