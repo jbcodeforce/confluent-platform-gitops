@@ -166,6 +166,13 @@ START: What do you want to do?
 - **ArgoCD Application:** `clusters/<cluster>/workloads/<app>.yaml` - Deployment configuration
 
 **Example: Adding a custom application (simplified)**
+
+**Quick method** - Use the scaffolding script:
+```bash
+./scripts/new-application.sh my-api workload flink-demo
+```
+
+**Manual method:**
 1. Create base: `workloads/my-api/base/` with deployment, service, ingress
 2. Create kustomization: `workloads/my-api/base/kustomization.yaml`
 3. Create overlay: `workloads/my-api/overlays/flink-demo/` with patches
@@ -292,34 +299,59 @@ Quick reference for common adoption scenarios:
 | **Pin to specific version** | Path 2 | [Release Process](release-process.md) |
 | **Customize resource limits** | Path 3 or 4 | Component-specific overlays |
 
-## Automation & Tooling Opportunities
+## Automation & Tooling
 
-The following automation scripts would streamline common adoption tasks. These are **documented for future implementation** - they do not currently exist.
+The following automation scripts streamline common adoption tasks.
 
-### High Priority Scripts
+### Available Scripts
 
-#### 1. `scripts/new-application.sh` - Scaffold Application Structure
-**Problem:** Creating base + overlay structure for new applications is repetitive
+#### 1. `scripts/new-application.sh` - Scaffold Application Structure ✅
 
-**Solution:** Generate application scaffolding with best practices
+**Problem:** Creating base + overlay structure for new applications is repetitive and error-prone.
+
+**Solution:** Automated scaffolding generates application structure with best practices baked in.
 
 **Usage:**
 ```bash
-./scripts/new-application.sh my-api kustomize flink-demo
-./scripts/new-application.sh vault helm flink-demo
+# Non-interactive mode
+./scripts/new-application.sh <app-name> <type> <cluster>
+
+# Examples
+./scripts/new-application.sh my-api workload flink-demo
+./scripts/new-application.sh vault infrastructure flink-demo
+
+# Interactive mode (prompts for all options)
+./scripts/new-application.sh
 ```
 
-**What it would do:**
-- Create `workloads/<app>/base/` or `infrastructure/<app>/base/` directory
-- Generate template manifests (deployment, service, ingress for Kustomize)
-- Generate values files (base + overlay for Helm)
-- Create ArgoCD Application manifest in `clusters/<cluster>/`
-- Add entry to cluster kustomization.yaml
-- Set appropriate sync wave based on type
+**Application types:**
+- `workload` - User-facing applications using Kustomize (creates deployment, service, ingress, namespace)
+- `infrastructure` - Platform components using Helm (creates values file structure)
 
-**Tracking:** [GitHub Issue #46](https://github.com/osowski/confluent-platform-gitops/issues/46)
+**What it does:**
+- ✅ Creates `workloads/<app>/base/` or `infrastructure/<app>/base/` directory structure
+- ✅ Generates template manifests (deployment, service, ingress for workloads)
+- ✅ Generates Helm values files (base + overlay for infrastructure)
+- ✅ Creates ArgoCD Application manifest in `clusters/<cluster>/`
+- ✅ Adds entry to cluster kustomization.yaml (sorted alphabetically)
+- ✅ Sets appropriate sync wave based on type (105 for workloads, 10 for infrastructure)
+- ✅ Validates naming conventions and checks for conflicts
+- ✅ Provides next-step guidance after creation
 
-### Medium Priority Scripts
+**Interactive mode features:**
+- Application name validation
+- Type selection (workload vs infrastructure)
+- Cluster selection from available clusters
+- Custom namespace configuration
+- Sync wave customization
+- Helm chart details (for infrastructure apps)
+- Port configuration (for workload apps)
+
+**See also:**
+- **Reference:** [GitHub Issue #46](https://github.com/osowski/confluent-platform-gitops/issues/46)
+- **Detailed usage:** [Adding Applications](adding-applications.md)
+
+### Future Scripts
 
 #### 2. `scripts/test-local.sh` - Automated Local Deployment
 **Usage:** `./scripts/test-local.sh [cluster-name]`

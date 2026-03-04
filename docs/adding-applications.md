@@ -14,6 +14,23 @@ This guide walks through adding a new application to an existing cluster in the 
 - Familiarity with Kustomize or Helm
 - Access to this Git repository
 
+## Quick Start: Automated Application Scaffolding
+
+**New!** Use the `new-application.sh` script to automatically generate application structure:
+
+```bash
+# Create a workload application (Kustomize-based)
+./scripts/new-application.sh my-api workload flink-demo
+
+# Create an infrastructure component (Helm-based)
+./scripts/new-application.sh vault infrastructure flink-demo
+
+# Interactive mode with prompts
+./scripts/new-application.sh
+```
+
+The script automatically creates the complete directory structure, manifests, ArgoCD Application CRD, and updates kustomization files. See the sections below for manual creation steps and understanding the structure.
+
 ## Decision: Kustomize vs Helm
 
 Choose the appropriate tool for your application:

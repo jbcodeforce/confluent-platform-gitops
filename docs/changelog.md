@@ -8,6 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- **Automation script: new-application.sh** ([#46](https://github.com/osowski/confluent-platform-gitops/issues/46))
+  - Scaffold application structure with single command: `./scripts/new-application.sh <app-name> <type> <cluster>`
+  - Creates complete directory structure for workload (Kustomize) or infrastructure (Helm) applications
+  - Generates base manifests (namespace, deployment, service, ingress for workloads) or Helm values structure (for infrastructure)
+  - Creates cluster-specific overlays and ArgoCD Application CRD with appropriate sync wave
+  - Automatically updates cluster kustomization.yaml with new application entry
+  - Supports interactive mode with prompts for all configuration options (sync wave, namespace, port, Helm details)
+  - Validates naming conventions and checks for existing applications to prevent conflicts
+  - Updated adoption guide and adding-applications documentation with usage examples
 - **Automation script: validate-cluster.sh** ([#45](https://github.com/osowski/confluent-platform-gitops/issues/45))
   - Comprehensive validation suite for cluster configuration: `./scripts/validate-cluster.sh <cluster-name> [--verbose]`
   - Validates YAML syntax, Kustomize builds, Helm templates, sync waves, AppProjects, and common misconfigurations
