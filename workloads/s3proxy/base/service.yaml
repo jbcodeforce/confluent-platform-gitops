@@ -4,6 +4,8 @@ kind: Service
 metadata:
   name: s3proxy
   namespace: flink
+  annotations:
+    argocd.argoproj.io/sync-wave: "15"
   labels:
     app: s3proxy
 spec:

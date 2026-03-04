@@ -42,6 +42,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Updated `docs/confluent-platform.md` with PodMonitor configuration details, verification steps, and Grafana dashboard integration guidance
 
 ### Fixed
+- **s3proxy sync-wave mismatch causing deployment blocking** ([#59](https://github.com/osowski/confluent-platform-gitops/issues/59))
+  - Updated s3proxy Deployment and Service sync-wave from "20" to "15" to match PVC sync-wave
+  - Prevents Deployment from blocking indefinitely when trying to mount PVC before it's fully bound
+  - All core s3proxy resources (PVC, Deployment, Service) now deployed in same sync wave 15
 - **Flink ServiceMonitor job label alignment with jmx-monitoring-stacks dashboards** ([#36](https://github.com/osowski/confluent-platform-gitops/issues/36))
   - Removed `jobLabel: type` from the Flink `ServiceMonitor`; Prometheus was assigning `job="flink-native-kubernetes"` which did not match the `job="flink"` selector hardcoded in upstream Flink Grafana dashboards
   - Added `relabelings` entry to the metrics endpoint to hardcode `job="flink"`, aligning with the [confluentinc/jmx-monitoring-stacks](https://github.com/confluentinc/jmx-monitoring-stacks) dashboard convention
