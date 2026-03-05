@@ -17,3 +17,17 @@ spec:
         name: kraftcontroller
     metricsClient:
       url: http://controlcenter.kafka.svc.cluster.local:9090
+  ## TODO MOVE THIS TO FLINK-DEMO OVERLAY
+  ## TODO ADD EXPLANATION FOR THIS BLOCK OF CONFIGURATION
+  ## USAGE: bootstrap.servers=kafka.flink-demo.confluentdemo.local:31000
+  listeners:
+    custom:
+      - name: external-nodeport
+        port: 9094
+        externalAccess:
+          type: nodePort
+          nodePort:
+            host: kafka.flink-demo.confluentdemo.local
+            nodePortOffset: 31000
+        tls:
+          enabled: false
