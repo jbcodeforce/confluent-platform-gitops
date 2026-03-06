@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
+- **Addressed TODO items for code organization and documentation** ([#65](https://github.com/osowski/confluent-platform-gitops/issues/65))
+  - Replaced imperative FlinkEnvironment creation in compute pool Job with declarative FlinkEnvironment CR (`flink-environment-env1.yaml`)
+  - Moved Kafka external listener configuration from base to flink-demo overlay for better cluster-specific separation
+  - Separated SchemaRegistry IngressRoute into dedicated file (`schema-registry-ingress.yaml`) within confluent-resources with overlay-based hostname patching
+  - Added External Access Patterns section to architecture.md documenting Kafka NodePort configuration for flink-demo cluster
 - **Updated Confluent Platform and Flink components to latest versions** ([#63](https://github.com/osowski/confluent-platform-gitops/issues/63))
   - Confluent Manager for Apache Flink (CMF): 2.1.0 → 2.2.0
   - Confluent Platform images: 8.1.0 → 8.2.0

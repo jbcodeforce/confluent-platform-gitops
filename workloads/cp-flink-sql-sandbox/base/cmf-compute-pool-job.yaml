@@ -53,9 +53,8 @@ spec:
         - |
           set -e
 
-          ##TODO Convert this to FlinkEnvironment CR in the future
-          echo "Creating Flink environment env1..."
-          confluent flink environment create env1 --kubernetes-namespace flink --url ${CMF_URL} || echo "Environment may already exist"
+          # FlinkEnvironment "env1" is now managed declaratively via FlinkEnvironment CR
+          # in workloads/flink-resources/base/flink-environment-env1.yaml
 
           echo "Creating Flink compute pool..."
           confluent flink compute-pool create /config/compute-pool.json --environment env1 --url ${CMF_URL} || echo "Compute pool may already exist"
