@@ -9,7 +9,6 @@ nodes:
           kubeletExtraArgs:
             node-labels: "ingress-ready=true"
     extraPortMappings:
-      ## TODO UPDATE DOCS TO REFLECT THIS FLINK-DEMO ARCHITECTURE CHANGE
       # Traefik HTTP/HTTPS
       - containerPort: 30000
         hostPort: 80
