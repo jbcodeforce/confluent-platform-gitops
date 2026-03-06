@@ -24,13 +24,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Updated documentation references in `docs/confluent-flink.md`
 
 ### Added
+- **Automation script: new-application.sh** ([#46](https://github.com/osowski/confluent-platform-gitops/issues/46))
+  - Scaffold application structure with single command: `./scripts/new-application.sh <app-name> <type> <cluster>`
+  - Creates complete directory structure for workload (Kustomize) or infrastructure (Helm) applications
 - **CP Flink SQL Sandbox application for flink-demo cluster** ([#57](https://github.com/osowski/confluent-platform-gitops/issues/57))
   - New `cp-flink-sql-sandbox` application enables running [cp-flink-sql demo](https://github.com/rjmfernandes/cp-flink-sql) out of the box
-  - Deploys Kafka topics (`myevent`, `myaggregated`) with registered Avro schemas
-  - Configures Flink catalog and database for automatic topic/schema recognition
-  - Creates compute pool with S3 checkpoint/savepoint storage
-  - New `s3proxy` application provides S3-compatible storage backend
-  - New `cmf-ingress` application exposes CMF API via Ingress
   - Includes README with endpoints and getting started instructions
 - **flink-demo cluster README** ([#57](https://github.com/osowski/confluent-platform-gitops/issues/57))
   - Comprehensive cluster documentation at `clusters/flink-demo/README.md`

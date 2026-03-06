@@ -28,6 +28,10 @@ Before doing work, Claude should follow this **standard workflow**:
 - Verify all documentation in `/docs` has been updated (architecture.md, project_spec.md, changelog.md)
 - Ensure PR description is accurate and includes explicit GitHub issue link
 - Confirm branch naming follows `feature-<id>/` or `fix-<id>/` format
+- All changes to `changelog.md` should be as concise as possible.
+   - At most, 3 lines maximum for a given top-level changelog entry.
+   - Each changelog entry should only contain the most immediate resultant impact to the user.
+   - Each changelog entry should not identify every single change made in a feature.
 
 ### 4) Commit & Document
 - Write a commit message that clearly states intent and outcome.
