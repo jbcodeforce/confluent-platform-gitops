@@ -159,6 +159,10 @@ S3-compatible object storage for Flink checkpoints and savepoints:
 - **Bucket**: `warehouse`
 - **Purpose**: Backend storage for Flink state management
 
+**Cyberduck Connection Profile:**
+
+To connect via Cyberduck GUI, download and import the [S3_flink-demo.cyberduckprofile](./cyberduck/S3_flink-demo.cyberduckprofile) connection profile. Double-click the file or manually install it to your Cyberduck Profiles directory.
+
 ## CP Flink SQL Sandbox
 
 The cluster includes an optional **cp-flink-sql-sandbox** application that provides a complete environment for running Flink SQL demos.
