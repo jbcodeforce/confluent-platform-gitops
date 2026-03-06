@@ -7,12 +7,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-03-06
+
+### Changed
+- **Addressed TODO items for code organization and documentation** ([#65](https://github.com/jbcodeforce/confluent-platform-gitops/issues/65))
+  - Replaced imperative FlinkEnvironment creation in compute pool Job with declarative FlinkEnvironment CR (`flink-environment-env1.yaml`)
+  - Moved Kafka external listener configuration from base to flink-demo overlay for better cluster-specific separation
+  - Separated SchemaRegistry IngressRoute into dedicated file (`schema-registry-ingress.yaml`) within confluent-resources with overlay-based hostname patching
+  - Added External Access Patterns section to architecture.md documenting Kafka NodePort configuration for flink-demo cluster
+- **Updated Confluent Platform and Flink components to latest versions** ([#63](https://github.com/jbcodeforce/confluent-platform-gitops/issues/63))
+  - Confluent Manager for Apache Flink (CMF): 2.1.0 → 2.2.0
+  - Confluent Platform images: 8.1.0 → 8.2.0
+  - Confluent init container: 3.1.0 → 3.1.1
+  - Control Center next-gen: 2.2.0 → 2.4.0
+  - Prometheus/AlertManager enterprise: 2.2.0 → 2.4.0
+  - Flink image: 1.19.1-cp1 → 1.20.3-cp1
+  - Confluent CLI: latest → 4.53.0 (pinned version)
+  - Updated documentation references in `docs/confluent-flink.md`
+
 ### Added
+- **Automation script: new-application.sh** ([#46](https://github.com/jbcodeforce/confluent-platform-gitops/issues/46))
+  - Scaffold application structure with single command: `./scripts/new-application.sh <app-name> <type> <cluster>`
+  - Creates complete directory structure for workload (Kustomize) or infrastructure (Helm) applications
+- **CP Flink SQL Sandbox application for flink-demo cluster** ([#57](https://github.com/jbcodeforce/confluent-platform-gitops/issues/57))
+  - New `cp-flink-sql-sandbox` application enables running [cp-flink-sql demo](https://github.com/rjmfernandes/cp-flink-sql) out of the box
+  - Includes README with endpoints and getting started instructions
+- **flink-demo cluster README** ([#57](https://github.com/jbcodeforce/confluent-platform-gitops/issues/57))
+  - Comprehensive cluster documentation at `clusters/flink-demo/README.md`
+- **Automation script: validate-cluster.sh** ([#45](https://github.com/jbcodeforce/confluent-platform-gitops/issues/45))
+  - Comprehensive validation suite for cluster configuration: `./scripts/validate-cluster.sh <cluster-name> [--verbose]`
+- **Automation script: update-repo-urls.sh** ([#44](https://github.com/jbcodeforce/confluent-platform-gitops/issues/44))
+  - Update all repository URLs after forking with single command: `./scripts/update-repo-urls.sh <new-url> [--dry-run]`
+- **Automation script: new-cluster.sh** ([#43](https://github.com/jbcodeforce/confluent-platform-gitops/issues/43))
+  - Scaffold new cluster directory structure with single command: `./scripts/new-cluster.sh <cluster-name> <domain>`
+- **Adoption guide for repository usage and fork customization** ([#15](https://github.com/jbcodeforce/confluent-platform-gitops/issues/15))
+  - New `docs/adoption-guide.md` provides strategic routing hub for users adopting this repository
+  - Five adoption paths: local development, deploy to cluster, customize infrastructure, add/modify workloads, fork customization
+  - Cross-references existing detailed guides without content duplication
 - **PodMonitor for CFK components in confluent-resources** ([#37](https://github.com/jbcodeforce/confluent-platform-gitops/issues/37))
   - Added `PodMonitor` resource to enable Prometheus metrics scraping from all Confluent for Kubernetes (CFK) managed components
-  - Single `PodMonitor` covers Kafka, KRaft Controller, Schema Registry, Connect, and Control Center via `confluent-platform` label selector
-  - Configured `jobLabel: platform.confluent.io/type` to set per-component Prometheus job labels (e.g., `job="kafka"`, `job="schemaregistry"`), aligning with [confluentinc/jmx-monitoring-stacks](https://github.com/confluentinc/jmx-monitoring-stacks) Grafana dashboard conventions
-  - Metrics exposed on port 7778 via Prometheus JMX Exporter
+  - Metrics exposed by default on port 7778 via Prometheus JMX Exporter
   - Updated `docs/confluent-platform.md` with PodMonitor configuration details, verification steps, and Grafana dashboard integration guidance
 
 ### Fixed
@@ -36,8 +70,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Configured with 2 replicas and PodDisruptionBudget for high availability
   - Deployed to kube-system namespace
   - Cluster-specific overlay includes --kubelet-insecure-tls for local/development environments
-
-## [0.3.0] - 2026-02-20
 
 ## [0.3.0] - 2026-02-20
 
@@ -305,7 +337,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Workloads project: Namespace-scoped resources only
 - Secrets excluded from repository (external management)
 
-[Unreleased]: https://github.com/jbcodeforce/confluent-platform-gitops/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/jbcodeforce/confluent-platform-gitops/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/jbcodeforce/confluent-platform-gitops/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/jbcodeforce/confluent-platform-gitops/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/jbcodeforce/confluent-platform-gitops/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/jbcodeforce/confluent-platform-gitops/compare/v0.1.0...v0.2.0
