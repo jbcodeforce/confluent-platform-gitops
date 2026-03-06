@@ -7,7 +7,7 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
   annotations:
-    argocd.argoproj.io/sync-wave: "20"  # Deploy after cert-manager and storage
+    argocd.argoproj.io/sync-wave: "20" # Deploy after cert-manager and storage
 spec:
   project: infrastructure
   sources:
@@ -19,7 +19,7 @@ spec:
       valueFiles:
         - $values/infrastructure/cert-manager/base/values.yaml
         - $values/infrastructure/cert-manager/overlays/flink-demo/values.yaml
-  - repoURL: https://github.com/jbcodeforce/confluent-platform-gitops
+  - repoURL: https://github.com/osowski/confluent-platform-gitops
     targetRevision: HEAD
     ref: values
   destination:
@@ -31,7 +31,7 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-      - ServerSideApply=true  # Required for CRDs
+      - ServerSideApply=true # Required for CRDs
     retry:
       limit: 5
       backoff:
