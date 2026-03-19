@@ -1,366 +1,329 @@
-# Flink Demo RBAC Cluster
-
-Multi-user RBAC demonstration cluster for Confluent Platform Flink with namespace-based isolation.
+# flink-demo-rbac Cluster
 
 ## Overview
 
-This cluster variant demonstrates comprehensive Role-Based Access Control (RBAC) for Confluent Platform Flink with the following features:
+- **Cluster Name:** flink-demo-rbac
+- **Domain:** confluentdemo.local
+- **Bootstrap:** `bootstrap.yaml`
 
-- **Group-based namespace isolation** - Shapes and Colors user groups with separate Flink environments
-- **Multi-layer authentication** - Kubernetes RBAC for kubectl, OIDC/OAuth for UI/CLI access
-- **Keycloak integration** - Identity provider running inside the Kubernetes cluster
-- **11 demo users** - 10 group users + 1 admin with pre-configured credentials
+## Quick Start
 
-## Architecture
+### Prerequisites
 
-### User Groups
+- Kubernetes cluster with ArgoCD installed
+- `kubectl` configured with cluster access
 
-**Shapes Group** (`/shapes`) - 5 users:
-- user-square@osow.ski (password: square123)
-- user-circle@osow.ski (password: circle123)
-- user-triangle@osow.ski (password: triangle123)
-- user-trapezoid@osow.ski (password: trapezoid123)
-- user-diamond@osow.ski (password: diamond123)
-
-**Colors Group** (`/colors`) - 5 users:
-- user-red@osow.ski (password: red123)
-- user-green@osow.ski (password: green123)
-- user-orange@osow.ski (password: orange123)
-- user-blue@osow.ski (password: blue123)
-- user-yellow@osow.ski (password: yellow123)
-
-**Admin**:
-- admin@osow.ski (password: admin123)
-
-### Namespaces
-
-- `flink-shapes` - FlinkEnvironment: shapes-env, FlinkApplication: shapes-wordcount
-- `flink-colors` - FlinkEnvironment: colors-env, FlinkApplication: colors-statemachine
-- `keycloak` - Keycloak identity provider + PostgreSQL backend
-
-### Access Control
-
-| User Group | kubectl Access | Control Center UI | CMF CLI |
-|------------|----------------|-------------------|---------|
-| Shapes | flink-shapes namespace only | shapes-env only | shapes-env only |
-| Colors | flink-colors namespace only | colors-env only | colors-env only |
-| Admin | All namespaces | All environments | All environments |
-
-## Prerequisites
-
-1. **Kind installed** - Kubernetes in Docker
-2. **kubectl installed** - Kubernetes CLI
-3. **Helm installed** - Package manager for Kubernetes
-4. **ArgoCD installed** - GitOps deployment tool
-
-## Setup Instructions
-
-### 1. Create the Cluster
+### Deploy Bootstrap
 
 ```bash
-# Create Kind cluster with custom configuration
-kind create cluster --name flink-demo-rbac --config kind-config.yaml
-
-# Verify cluster is running
-kubectl cluster-info
+kubectl apply -f clusters/flink-demo-rbac/bootstrap.yaml
 ```
 
-### 2. Add /etc/hosts Entries
+### Verify Deployment
 
 ```bash
-# Get Kind node IP
-CLUSTER_IP=$(kubectl get nodes -o jsonpath='{.items[0].status.addresses[?(@.type=="InternalIP")].address}')
+# Check bootstrap application
+kubectl get application bootstrap -n argocd
 
-# Add required hostnames to /etc/hosts
-cat <<EOF | sudo tee -a /etc/hosts
-$CLUSTER_IP controlcenter.flink-demo-rbac.confluentdemo.local
-$CLUSTER_IP kafka.flink-demo-rbac.confluentdemo.local
-$CLUSTER_IP keycloak.flink-demo-rbac.confluentdemo.local
+# Check parent applications
+kubectl get applications -n argocd
+
+# Watch sync progress
+kubectl get applications -n argocd -w
+```
+
+## Applications
+
+This cluster includes all infrastructure and workload applications from the reference `flink-demo` cluster.
+Remove any applications you don't need by deleting the files and removing them from the kustomization.yaml files.
+
+### Infrastructure Applications
+
+Infrastructure applications are defined in `infrastructure/kustomization.yaml`:
+
+- **argocd-config** (wave 85) - ArgoCD ConfigMap patches for custom health checks
+- **argocd-ingress** (wave 80) - Traefik IngressRoute for ArgoCD UI
+- **cert-manager** (wave 20) - TLS certificate management
+- **cert-manager-resources** (wave 75) - ClusterIssuer and certificates
+- **kube-prometheus-stack-crds** (wave 2) - Prometheus Operator CRDs
+- **kube-prometheus-stack** (wave 20) - Monitoring stack (Prometheus, Grafana, Alertmanager)
+- **metrics-server** (wave 5) - Kubernetes Metrics Server
+- **traefik** (wave 10) - Ingress controller
+- **trust-manager** (wave 30) - CA certificate distribution
+- **vault** (wave 40) - HashiCorp Vault (dev mode)
+- **vault-ingress** (wave 45) - Traefik IngressRoute for Vault UI
+- **vault-config** (wave 50) - Vault transit engine configuration
+
+### Workload Applications
+
+Workload applications are defined in `workloads/kustomization.yaml`:
+
+- **namespaces** (wave 100) - Namespace definitions (kafka, flink, operator)
+- **cfk-operator** (wave 105) - Confluent for Kubernetes operator
+- **confluent-resources** (wave 110) - Confluent Platform (KRaft, Kafka, Schema Registry, etc.)
+- **controlcenter-ingress** (wave 115) - Traefik IngressRoute for Control Center UI
+- **flink-kubernetes-operator** (wave 116) - Flink Kubernetes Operator
+- **observability-resources** (wave 117) - PodMonitors and Grafana dashboards
+- **cmf-operator** (wave 118) - Confluent Manager for Apache Flink
+- **flink-resources** (wave 120) - Flink integration resources
+
+## Creating Cluster-Specific Overlays
+
+Most applications work with base configuration. Create overlays only when you need cluster-specific customization.
+
+### Understanding Base + Overlay Pattern
+
+- **Base values:** Shared configuration in `infrastructure/<app>/base/` or `workloads/<app>/base/`
+- **Overlay values:** Cluster-specific overrides in `infrastructure/<app>/overlays/flink-demo-rbac/` or `workloads/<app>/overlays/flink-demo-rbac/`
+- **Missing overlays:** Applications will use base values if overlay files don't exist (thanks to `ignoreMissingValueFiles: true`)
+
+### When to Create Overlays
+
+| Overlay Type | When Needed | Examples |
+|--------------|-------------|----------|
+| **Ingress Hostnames** | Required for UI access | argocd-ingress, vault-ingress, controlcenter-ingress |
+| **Environment-Specific** | KIND vs cloud differences | traefik (DaemonSet+NodePort for KIND), metrics-server (insecure TLS) |
+| **Resource Limits** | Production tuning | kube-prometheus-stack, cfk-operator |
+| **Debug Settings** | Development clusters | cfk-operator debug mode |
+
+### Required Overlays for Ingress Access
+
+**ArgoCD Ingress** (if using ArgoCD UI):
+
+```bash
+mkdir -p infrastructure/argocd-ingress/overlays/flink-demo-rbac
+cat > infrastructure/argocd-ingress/overlays/flink-demo-rbac/ingressroute-patch.yaml <<'EOF'
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: argocd-server
+  namespace: argocd
+spec:
+  routes:
+    - match: Host(\`argocd.flink-demo-rbac.confluentdemo.local\`)
+      kind: Rule
+      priority: 10
+      services:
+        - name: argocd-server
+          port: 80
+  tls:
+    secretName: argocd-tls
+EOF
+
+cat > infrastructure/argocd-ingress/overlays/flink-demo-rbac/kustomization.yaml <<'EOF'
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+patches:
+  - path: ingressroute-patch.yaml
 EOF
 ```
 
-### 3. Bootstrap ArgoCD and Infrastructure
-
-Follow the standard bootstrap procedure to deploy ArgoCD and infrastructure components.
-
-### 4. Deploy Keycloak
+**Vault Ingress** (if using Vault UI):
 
 ```bash
-# Deploy Keycloak and PostgreSQL
-kubectl apply -f ../../workloads/keycloak/base/
+mkdir -p infrastructure/vault-ingress/overlays/flink-demo-rbac
+cat > infrastructure/vault-ingress/overlays/flink-demo-rbac/ingressroute-patch.yaml <<'EOF'
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: vault-server
+  namespace: vault
+spec:
+  routes:
+    - match: Host(\`vault.flink-demo-rbac.confluentdemo.local\`)
+      kind: Rule
+      priority: 10
+      services:
+        - name: vault
+          port: 8200
+  tls:
+    secretName: vault-tls
+EOF
 
-# Wait for Keycloak to be ready
-kubectl wait --for=condition=ready pod -l app=keycloak -n keycloak --timeout=300s
+cat > infrastructure/vault-ingress/overlays/flink-demo-rbac/kustomization.yaml <<'EOF'
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
 
-# Verify Keycloak is accessible
-curl http://keycloak.flink-demo-rbac.confluentdemo.local:30080/realms/confluent/.well-known/openid-configuration
+resources:
+  - ../../base
+
+patches:
+  - path: ingressroute-patch.yaml
+EOF
 ```
 
-**Keycloak Admin Console:** http://keycloak.flink-demo-rbac.confluentdemo.local:30080
-- Username: `admin`
-- Password: `admin`
-
-### 5. Generate User kubeconfig Contexts
+**Control Center Ingress** (if using Confluent Control Center UI):
 
 ```bash
-# Run the RBAC kubeconfig setup script
-../../scripts/setup-rbac-kubeconfigs.sh
+mkdir -p workloads/controlcenter-ingress/overlays/flink-demo-rbac
+cat > workloads/controlcenter-ingress/overlays/flink-demo-rbac/ingressroute-patch.yaml <<'EOF'
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: controlcenter
+  namespace: kafka
+spec:
+  routes:
+    - match: Host(\`controlcenter.flink-demo-rbac.confluentdemo.local\`)
+      kind: Rule
+      priority: 10
+      services:
+        - name: controlcenter
+          port: 9021
+  tls:
+    secretName: controlcenter-tls
+EOF
 
-# This creates kubeconfig files in ~/.kube/flink-rbac/ for:
-# - Each shapes group user
-# - Each colors group user
-# - Admin user
+cat > workloads/controlcenter-ingress/overlays/flink-demo-rbac/kustomization.yaml <<'EOF'
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+patches:
+  - path: ingressroute-patch.yaml
+EOF
 ```
 
-### 6. Test kubectl Access
+### Optional Environment-Specific Overlays
+
+**Traefik for KIND Clusters** (local development):
 
 ```bash
-# Test as shapes group user (user-square)
-export KUBECONFIG=~/.kube/flink-rbac/user-square@flink-demo-rbac.kubeconfig
-kubectl get flinkapplications
-# Should only see resources in flink-shapes namespace
+mkdir -p infrastructure/traefik/overlays/flink-demo-rbac
+cat > infrastructure/traefik/overlays/flink-demo-rbac/values.yaml <<'EOF'
+# KIND-specific configuration: DaemonSet + NodePort
+deployment:
+  kind: DaemonSet
 
-# Test as colors group user (user-red)
-export KUBECONFIG=~/.kube/flink-rbac/user-red@flink-demo-rbac.kubeconfig
-kubectl get flinkapplications
-# Should only see resources in flink-colors namespace
+service:
+  type: NodePort
 
-# Test as admin
-export KUBECONFIG=~/.kube/flink-rbac/admin@flink-demo-rbac.kubeconfig
-kubectl get flinkapplications --all-namespaces
-# Should see resources in all namespaces
-
-# Return to Kind cluster admin
-unset KUBECONFIG
-# Or: export KUBECONFIG=~/.kube/config
+# Enable insecure TLS for self-signed certificates
+additionalArguments:
+  - "--serversTransport.insecureSkipVerify=true"
+EOF
 ```
 
-### 7. Test Control Center UI Access
-
-1. Open browser: http://controlcenter.flink-demo-rbac.confluentdemo.local
-2. You'll be redirected to Keycloak login
-3. Login as any user (e.g., user-circle / circle123)
-4. Navigate to Flink section - should only see resources from that user's group
-5. Logout and login as admin - should see all resources
-
-### 8. Test Confluent CLI Access
+**Traefik for Cloud Clusters** (production):
 
 ```bash
-# Install Confluent CLI
-curl -sL --http1.1 https://cnfl.io/cli | sh -s -- latest
+mkdir -p infrastructure/traefik/overlays/flink-demo-rbac
+cat > infrastructure/traefik/overlays/flink-demo-rbac/values.yaml <<'EOF'
+# Cloud-specific configuration: Deployment + LoadBalancer
+deployment:
+  kind: Deployment
+  replicas: 2
 
-# Login as shapes group user
-confluent login --username user-triangle@osow.ski --password triangle123
+service:
+  type: LoadBalancer
+  annotations:
+    # Add cloud provider annotations as needed
+    # service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
 
-# List Flink environments (should only see shapes-env)
-confluent flink environment list
+# Production TLS settings
+additionalArguments:
+  - "--entrypoints.websecure.http.tls=true"
+EOF
 ```
 
-## Access Patterns
-
-### Kind Cluster Admin (Kubernetes Platform Administrator)
+**Metrics Server for KIND Clusters** (insecure TLS):
 
 ```bash
-# Get cluster admin kubeconfig
-kind get kubeconfig --name flink-demo-rbac > ~/.kube/flink-demo-rbac-admin.kubeconfig
-export KUBECONFIG=~/.kube/flink-demo-rbac-admin.kubeconfig
-
-# Full cluster access - no Keycloak interaction
-kubectl get pods --all-namespaces
-kubectl get flinkapplications --all-namespaces
-kubectl describe node
+mkdir -p infrastructure/metrics-server/overlays/flink-demo-rbac
+cat > infrastructure/metrics-server/overlays/flink-demo-rbac/values.yaml <<'EOF'
+# KIND-specific: Allow insecure TLS for self-signed kubelet certificates
+args:
+  - --kubelet-insecure-tls
+EOF
 ```
 
-**Use cases:**
-- Cluster management and debugging
-- Emergency operations
-- Infrastructure troubleshooting
-- ArgoCD management
+### Optional Production Tuning Overlays
 
-### Demo Users (Application Developers/Operators)
+**Kube-Prometheus-Stack** (resource limits, retention):
 
 ```bash
-# Use ServiceAccount-based kubeconfig
-export KUBECONFIG=~/.kube/flink-rbac/user-blue@flink-demo-rbac.kubeconfig
+mkdir -p infrastructure/kube-prometheus-stack/overlays/flink-demo-rbac
+cat > infrastructure/kube-prometheus-stack/overlays/flink-demo-rbac/values.yaml <<'EOF'
+prometheus:
+  prometheusSpec:
+    retention: 30d
+    resources:
+      requests:
+        cpu: 500m
+        memory: 2Gi
+      limits:
+        cpu: 2000m
+        memory: 8Gi
 
-# Limited namespace access
-kubectl get flinkapplications  # Only sees flink-colors namespace
-kubectl get flinkapplications -n flink-shapes  # Forbidden
-
-# For C3 UI and CMF CLI - Keycloak authentication required
+grafana:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+EOF
 ```
 
-**Use cases:**
-- Managing Flink applications within assigned environments
-- Viewing logs and metrics for authorized resources
-- Creating/updating FlinkApplications in allowed namespaces
-
-## Alternative: External Keycloak with Docker Compose
-
-For development convenience, Keycloak can run outside the cluster using Docker Compose.
-
-### When to Use External Keycloak
-
-- **Faster iteration** - No need to rebuild/redeploy Keycloak pod
-- **Persistent realm changes** - Easier to test realm configuration changes
-- **Simpler debugging** - Direct access to Keycloak logs via `docker logs`
-- **Resource constraints** - Free up cluster resources for other workloads
-
-### Docker Compose Setup
-
-**File:** `keycloak-external/docker-compose.yaml`
-
-```yaml
-version: '3.8'
-
-services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: keycloak-postgres
-    environment:
-      POSTGRES_DB: keycloak
-      POSTGRES_USER: keycloak
-      POSTGRES_PASSWORD: keycloak
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - keycloak-net
-
-  keycloak:
-    image: quay.io/keycloak/keycloak:26.2.5
-    container_name: keycloak
-    command: start-dev --import-realm
-    environment:
-      KC_DB: postgres
-      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak
-      KC_DB_USERNAME: keycloak
-      KC_DB_PASSWORD: keycloak
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-      KC_HTTP_PORT: 30080
-      KC_HOSTNAME_STRICT: false
-      KC_HOSTNAME_STRICT_HTTPS: false
-    ports:
-      - "30080:30080"
-    volumes:
-      - ./realm-import:/opt/keycloak/data/import
-    networks:
-      - keycloak-net
-    depends_on:
-      - postgres
-
-networks:
-  keycloak-net:
-
-volumes:
-  postgres_data:
-```
-
-### Using External Keycloak
-
-1. **Start Keycloak:**
-   ```bash
-   cd keycloak-external
-   docker-compose up -d
-   ```
-
-2. **Update CMF and C3 configurations** to use `http://keycloak.flink-demo-rbac.confluentdemo.local:30080` instead of internal cluster DNS
-
-3. **No /etc/hosts changes needed** - Uses same hostname, just different endpoint
-
-4. **Stop Keycloak:**
-   ```bash
-   docker-compose down
-   # Preserve data: docker-compose down (volumes persist)
-   # Clean slate: docker-compose down -v (removes volumes)
-   ```
-
-### Trade-offs
-
-| Aspect | In-Cluster Keycloak | External Docker Compose |
-|--------|---------------------|------------------------|
-| Setup complexity | Higher (K8s manifests) | Lower (single docker-compose) |
-| Production-like | ✅ Yes | ❌ No |
-| Resource usage | Uses cluster resources | Separate Docker containers |
-| Iteration speed | Slower (pod restarts) | Faster (container restarts) |
-| Realm persistence | PVC in cluster | Docker volume on host |
-| Network access | Requires NodePort/Ingress | Direct port mapping |
-
-## Troubleshooting
-
-### Keycloak Not Accessible
+**CFK Operator** (debug mode for development):
 
 ```bash
-# Check Keycloak pod status
-kubectl get pods -n keycloak
+mkdir -p workloads/cfk-operator/overlays/flink-demo-rbac
+cat > workloads/cfk-operator/overlays/flink-demo-rbac/values.yaml <<'EOF'
+debug: true
 
-# Check Keycloak logs
-kubectl logs -n keycloak -l app=keycloak
-
-# Verify NodePort service
-kubectl get svc -n keycloak keycloak-external
-
-# Test internal cluster access
-kubectl run curl-test --image=curlimages/curl -it --rm -- \
-  curl http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+EOF
 ```
 
-### User Cannot Access Namespace
+### Verifying Overlay Configuration
+
+After creating overlays, verify the configuration:
 
 ```bash
-# Check ServiceAccount exists
-kubectl get sa user-square -n flink-shapes
+# Check that Application manifests reference overlays correctly
+grep -r "overlays/flink-demo-rbac" infrastructure/ workloads/
 
-# Check RoleBinding
-kubectl get rolebinding -n flink-shapes
+# Validate Kustomize builds (for Kustomize-based apps)
+kustomize build infrastructure/argocd-ingress/overlays/flink-demo-rbac
 
-# Test permissions
-kubectl auth can-i get flinkapplications \
-  --as=system:serviceaccount:flink-shapes:user-square \
-  -n flink-shapes
+# Validate Helm values (for Helm-based apps)
+# Values are validated during ArgoCD sync
 ```
 
-### Control Center Redirect Loop
+## Access
+
+### ArgoCD UI
 
 ```bash
-# Verify Keycloak client configuration
-# Login to Keycloak admin console
-# Check redirect URIs for controlcenter client
+# Get cluster-specific hostname (after argocd-ingress is deployed)
+kubectl get ingressroute -n argocd argocd-server -o yaml | yq '.spec.routes[0].match'
 
-# Verify C3 OIDC configuration
-kubectl get controlcenter -n kafka -o yaml | grep -A 10 oidc
+# Get admin password
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
 
-### Token Expiration Issues
+Navigate to `https://argocd.flink-demo-rbac.confluentdemo.local` and login with username `admin`.
 
-Token lifespan is set to 120 minutes (7200 seconds). If users are getting logged out:
+## Customization
 
-1. **Increase token lifespan** in Keycloak:
-   - Keycloak Admin Console → Realm Settings → Tokens
-   - Access Token Lifespan: 120 minutes (default)
-   - Increase as needed for longer demo sessions
+This cluster was created using `scripts/new-cluster.sh`. Customize by:
 
-2. **Check session timeout** in Control Center:
-   - Should be configured to 7200000 ms (2 hours)
+1. Adding applications to `infrastructure/kustomization.yaml`
+2. Adding applications to `workloads/kustomization.yaml`
+3. Creating cluster-specific overlays in `infrastructure/` and `workloads/`
 
-## Documentation
-
-For complete implementation details, architecture diagrams, and step-by-step configuration:
-
-**See:** `/docs/flink-rbac-research.md`
-
-## Cleanup
-
-```bash
-# Delete the Kind cluster
-kind delete cluster --name flink-demo-rbac
-
-# Remove /etc/hosts entries
-sudo sed -i.bak '/flink-demo-rbac.confluentdemo.local/d' /etc/hosts
-
-# Clean up kubeconfig files
-rm -rf ~/.kube/flink-rbac/
-
-# Stop external Keycloak (if using Docker Compose)
-cd keycloak-external && docker-compose down -v
-```
+See [Cluster Onboarding](../../docs/cluster-onboarding.md) for detailed guidance.
