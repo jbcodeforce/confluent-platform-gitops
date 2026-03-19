@@ -24,7 +24,7 @@ Each group gets:
 - kafka namespace - Read all Confluent Platform resources and core resources
 - flink namespace - Read all Flink and CFK resources and core resources
 
-**Admin user:**
+**Flink admin:**
 - Full cluster-wide access to all Flink, CFK, and Kubernetes resources
 - Can manage RBAC resources
 
@@ -63,7 +63,7 @@ The two RBAC systems work together:
 
 - **shapes-group** (flink-shapes) - Represents shapes user group
 - **colors-group** (flink-colors) - Represents colors user group
-- **admin-user** (default) - Represents admin user
+- **flink-admin** (default) - Represents Flink admin user
 
 ### RoleBindings
 
@@ -76,7 +76,7 @@ The two RBAC systems work together:
 
 ### ClusterRoleBinding
 
-- admin-user → flink-admin - Cluster-wide admin access
+- flink-admin → flink-admin - Cluster-wide admin access
 
 ## API Groups Used
 
