@@ -34,8 +34,8 @@ cmf:
   # Kafka-specific OAuth configuration
   kafka:
     # OAuth bearer allowed URLs - Required for OAuth authentication
-    # Allows CMF to connect to Keycloak for token validation
-    oauthbearerAllowedUrls: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent,http://keycloak.flink-demo-rbac.confluentdemo.local:30080/realms/confluent
+    # Must include full token endpoint URL paths, not just realm base URLs
+    oauthbearerAllowedUrls: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/token,http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/certs,http://keycloak.flink-demo-rbac.confluentdemo.local:30080/realms/confluent/protocol/openid-connect/token,http://keycloak.flink-demo-rbac.confluentdemo.local:30080/realms/confluent/protocol/openid-connect/certs
 
 # Authorization configuration - connect to MDS for RBAC
   authorization:
