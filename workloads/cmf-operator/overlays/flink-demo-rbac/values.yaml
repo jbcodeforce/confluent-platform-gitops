@@ -4,3 +4,33 @@
 # Additional pod annotations for flink-demo-rbac cluster identification
 podAnnotations:
   cluster: flink-demo-rbac
+
+# OAuth authentication configuration for CMF REST API
+# Validates bearer tokens from Keycloak for incoming client requests
+cmf:
+  authentication:
+    type: oauth
+    config:
+      # JWKS endpoint for token validation (internal cluster DNS)
+      oauthbearer.jwks.endpoint.url: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/certs
+
+      # Expected issuer must match the external URL that clients use
+      # This is what appears in the token's "iss" claim
+      oauthbearer.expected.issuer: http://keycloak.flink-demo-rbac.confluentdemo.local:30080/realms/confluent
+
+      # Principal claim - use email as the user identifier
+      oauthbearer.sub.claim.name: email
+
+      # Groups claim - extract group membership from tokens
+      oauthbearer.groups.claim.name: groups
+
+      # Expected audience (optional) - CMF client ID
+      oauthbearer.expected.audience: cmf
+
+      # Token endpoint for CMF to obtain its own tokens (internal cluster DNS)
+      # Used when CMF needs to authenticate as a service principal
+      oauthbearer.token.endpoint.url: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/token
+
+# Note: Full RBAC authorization requires MDS (Metadata Service) deployment
+# Without MDS, OAuth provides authentication (identity verification) only
+# Group-based authorization would require MDS configuration

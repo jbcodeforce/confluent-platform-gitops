@@ -4,6 +4,19 @@ kind: Kustomization
 # Reference base configuration
 resources:
   - ../../base
+  - cmfrestclass-shapes.yaml
+  - cmfrestclass-colors.yaml
+
+# Remove the base CMFRestClass since we have namespace-specific ones
+patches:
+  # Delete the base cmfrestclass from flink namespace
+  - patch: |-
+      $patch: delete
+      apiVersion: platform.confluent.io/v1beta1
+      kind: CMFRestClass
+      metadata:
+        name: cmf-rest-class
+        namespace: flink
 
 # Cluster-specific labels
 labels:
