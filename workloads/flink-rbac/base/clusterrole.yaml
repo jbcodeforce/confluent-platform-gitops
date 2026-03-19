@@ -1,0 +1,69 @@
+---
+# ClusterRole for Flink administrators with full cluster-wide access
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: flink-admin
+rules:
+  # Full access to all Flink Kubernetes Operator resources
+  - apiGroups:
+      - flink.apache.org
+    resources:
+      - "*"
+    verbs:
+      - "*"
+
+  # Full access to all CFK resources (including Flink and Confluent Platform)
+  - apiGroups:
+      - platform.confluent.io
+    resources:
+      - "*"
+    verbs:
+      - "*"
+
+  # Full access to core Kubernetes resources
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - pods/log
+      - pods/exec
+      - services
+      - configmaps
+      - secrets
+      - persistentvolumeclaims
+      - events
+      - namespaces
+    verbs:
+      - "*"
+
+  # Full access to apps resources
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+      - statefulsets
+      - replicasets
+      - daemonsets
+    verbs:
+      - "*"
+
+  # Full access to batch resources
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+      - cronjobs
+    verbs:
+      - "*"
+
+  # Full access to RBAC resources (for managing user permissions)
+  - apiGroups:
+      - rbac.authorization.k8s.io
+    resources:
+      - roles
+      - rolebindings
+      - clusterroles
+      - clusterrolebindings
+    verbs:
+      - "*"

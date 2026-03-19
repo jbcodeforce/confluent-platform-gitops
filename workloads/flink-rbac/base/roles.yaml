@@ -1,0 +1,218 @@
+---
+# Role for Flink developers in flink-shapes namespace - Full permissions
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: flink-developer
+  namespace: flink-shapes
+rules:
+  # Full access to all Flink Kubernetes Operator resources
+  - apiGroups:
+      - flink.apache.org
+    resources:
+      - "*"
+    verbs:
+      - "*"
+
+  # Full access to CFK Flink resources (FlinkEnvironment, FlinkApplication, CMFRestClass)
+  - apiGroups:
+      - platform.confluent.io
+    resources:
+      - flinkenvironments
+      - flinkenvironments/status
+      - flinkapplications
+      - flinkapplications/status
+      - cmfrestclasses
+      - cmfrestclasses/status
+    verbs:
+      - "*"
+
+  # Full access to core Kubernetes resources in this namespace
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - pods/log
+      - pods/exec
+      - services
+      - configmaps
+      - secrets
+      - persistentvolumeclaims
+      - events
+    verbs:
+      - "*"
+
+  # Full access to apps resources
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+      - statefulsets
+      - replicasets
+    verbs:
+      - "*"
+
+  # Full access to batch resources
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+      - cronjobs
+    verbs:
+      - "*"
+---
+# Role for Flink developers in flink-colors namespace - Full permissions
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: flink-developer
+  namespace: flink-colors
+rules:
+  # Full access to all Flink Kubernetes Operator resources
+  - apiGroups:
+      - flink.apache.org
+    resources:
+      - "*"
+    verbs:
+      - "*"
+
+  # Full access to CFK Flink resources (FlinkEnvironment, FlinkApplication, CMFRestClass)
+  - apiGroups:
+      - platform.confluent.io
+    resources:
+      - flinkenvironments
+      - flinkenvironments/status
+      - flinkapplications
+      - flinkapplications/status
+      - cmfrestclasses
+      - cmfrestclasses/status
+    verbs:
+      - "*"
+
+  # Full access to core Kubernetes resources in this namespace
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - pods/log
+      - pods/exec
+      - services
+      - configmaps
+      - secrets
+      - persistentvolumeclaims
+      - events
+    verbs:
+      - "*"
+
+  # Full access to apps resources
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+      - statefulsets
+      - replicasets
+    verbs:
+      - "*"
+
+  # Full access to batch resources
+  - apiGroups:
+      - batch
+    resources:
+      - jobs
+      - cronjobs
+    verbs:
+      - "*"
+---
+# Read-only role in kafka namespace for Flink developers
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: kafka-reader
+  namespace: kafka
+rules:
+  # Read access to all Confluent Platform resources
+  - apiGroups:
+      - platform.confluent.io
+    resources:
+      - "*"
+    verbs:
+      - get
+      - list
+      - watch
+
+  # Read access to core resources
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - pods/log
+      - services
+      - configmaps
+      - events
+    verbs:
+      - get
+      - list
+      - watch
+
+  # Read access to apps resources
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+      - statefulsets
+    verbs:
+      - get
+      - list
+      - watch
+---
+# Read-only role in flink namespace for Flink developers
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: flink-reader
+  namespace: flink
+rules:
+  # Read access to all Flink resources
+  - apiGroups:
+      - flink.apache.org
+    resources:
+      - "*"
+    verbs:
+      - get
+      - list
+      - watch
+
+  # Read access to all CFK resources
+  - apiGroups:
+      - platform.confluent.io
+    resources:
+      - "*"
+    verbs:
+      - get
+      - list
+      - watch
+
+  # Read access to core resources
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - pods/log
+      - services
+      - configmaps
+      - events
+    verbs:
+      - get
+      - list
+      - watch
+
+  # Read access to apps resources
+  - apiGroups:
+      - apps
+    resources:
+      - deployments
+      - statefulsets
+    verbs:
+      - get
+      - list
+      - watch
