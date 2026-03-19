@@ -1,0 +1,30 @@
+---
+# RoleBinding for shapes group in flink-shapes namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: shapes-group-flink-developer
+  namespace: flink-shapes
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: flink-developer
+subjects:
+  - kind: ServiceAccount
+    name: shapes-group
+    namespace: flink-shapes
+---
+# RoleBinding for colors group in flink-colors namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: colors-group-flink-developer
+  namespace: flink-colors
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: flink-developer
+subjects:
+  - kind: ServiceAccount
+    name: colors-group
+    namespace: flink-colors

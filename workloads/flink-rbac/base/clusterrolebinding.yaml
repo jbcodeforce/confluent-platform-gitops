@@ -1,0 +1,14 @@
+---
+# ClusterRoleBinding for admin user
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: admin-flink-admin
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: flink-admin
+subjects:
+  - kind: ServiceAccount
+    name: admin-user
+    namespace: default

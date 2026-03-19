@@ -1,0 +1,132 @@
+---
+# Role for Flink developers in flink-shapes namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: flink-developer
+  namespace: flink-shapes
+rules:
+  # Flink Kubernetes Operator resources
+  - apiGroups:
+      - flink.apache.org
+    resources:
+      - flinkdeployments
+      - flinkdeployments/status
+      - flinksessionjobs
+      - flinksessionjobs/status
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+
+  # CMF resources
+  - apiGroups:
+      - sql.flink.apache.org
+    resources:
+      - flinkenvironments
+      - flinkenvironments/status
+      - flinkapplications
+      - flinkapplications/status
+      - cmfrestclasses
+      - cmfrestclasses/status
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+
+  # Core resources needed for Flink operations
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - pods/log
+      - services
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+
+  # Events for troubleshooting
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - get
+      - list
+      - watch
+---
+# Role for Flink developers in flink-colors namespace
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: flink-developer
+  namespace: flink-colors
+rules:
+  # Flink Kubernetes Operator resources
+  - apiGroups:
+      - flink.apache.org
+    resources:
+      - flinkdeployments
+      - flinkdeployments/status
+      - flinksessionjobs
+      - flinksessionjobs/status
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+
+  # CMF resources
+  - apiGroups:
+      - sql.flink.apache.org
+    resources:
+      - flinkenvironments
+      - flinkenvironments/status
+      - flinkapplications
+      - flinkapplications/status
+      - cmfrestclasses
+      - cmfrestclasses/status
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+
+  # Core resources needed for Flink operations
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+      - pods/log
+      - services
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+
+  # Events for troubleshooting
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - get
+      - list
+      - watch
