@@ -21,9 +21,19 @@ spec:
       # Authentication to MDS using OAuth
       authentication:
         type: oauth
+        # JAAS configuration with OAuth client credentials
+        jaasConfig:
+          secretRef: kraft-oauth-client
         oauthSettings:
           tokenEndpointUri: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/token
+          expectedIssuer: http://keycloak.flink-demo-rbac.confluentdemo.local:30080/realms/confluent
           jwksEndpointUri: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/certs
-          # Client credentials for KRaft to authenticate
-          clientCredentials:
-            secretRef: kraft-oauth-client
+          subClaimName: email
+
+  # JVM configuration for OAuth SASL mechanism
+  configOverrides:
+    jvm:
+      # Enable OAuthBearer SASL mechanism
+      - "-Djava.security.auth.login.config=/opt/confluentinc/etc/kafka/kafka.properties.jaas.conf"
+      # Allow Keycloak token endpoint URLs
+      - "-Dorg.apache.kafka.common.security.oauthbearer.OAuthBearerLoginCallbackHandler.JWKS_ENDPOINT_REFRESH_MS=3600000"
