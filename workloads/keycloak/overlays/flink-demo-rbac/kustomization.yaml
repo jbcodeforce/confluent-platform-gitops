@@ -4,6 +4,13 @@ kind: Kustomization
 resources:
   - ../../base
 
+# Cluster-specific patches
+patches:
+  - path: ingress-patch.yaml
+    target:
+      kind: IngressRoute
+      name: keycloak
+
 # Cluster-specific labels
 labels:
 - includeSelectors: false
