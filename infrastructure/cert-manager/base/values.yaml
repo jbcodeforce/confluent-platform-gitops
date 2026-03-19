@@ -1,3 +1,3 @@
 # Base configuration for cert-manager
-crds:
-  enabled: true
+# Install CRDs as part of Helm chart installation
+installCRDs: true
