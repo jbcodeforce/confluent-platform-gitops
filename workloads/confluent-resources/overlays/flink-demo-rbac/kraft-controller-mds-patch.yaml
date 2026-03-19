@@ -1,0 +1,39 @@
+# KRaft Controller RBAC Configuration Patch
+# Enables RBAC authorization for KRaft controllers
+apiVersion: platform.confluent.io/v1beta1
+kind: KRaftController
+metadata:
+  name: kraftcontroller
+  namespace: kafka
+spec:
+  # Enable RBAC authorization
+  authorization:
+    type: rbac
+    superUsers:
+      - User:kafka
+      - User:admin@osow.ski
+
+  # MDS Kafka cluster connection for RBAC
+  dependencies:
+    mdsKafkaCluster:
+      # Bootstrap endpoint for Kafka cluster with MDS
+      bootstrapEndpoint: kafka.kafka.svc.cluster.local:9071
+      # Authentication to MDS using OAuth
+      authentication:
+        type: oauth
+        # JAAS configuration with OAuth client credentials
+        jaasConfig:
+          secretRef: kraft-oauth-client
+        oauthSettings:
+          tokenEndpointUri: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/token
+          expectedIssuer: http://keycloak.flink-demo-rbac.confluentdemo.local:30080/realms/confluent
+          jwksEndpointUri: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/certs
+          subClaimName: email
+
+  # JVM configuration for OAuth SASL mechanism
+  configOverrides:
+    jvm:
+      # Enable OAuthBearer SASL mechanism
+      - "-Djava.security.auth.login.config=/opt/confluentinc/etc/kafka/kafka.properties.jaas.conf"
+      # Allow Keycloak token endpoint URLs
+      - "-Dorg.apache.kafka.common.security.oauthbearer.OAuthBearerLoginCallbackHandler.JWKS_ENDPOINT_REFRESH_MS=3600000"

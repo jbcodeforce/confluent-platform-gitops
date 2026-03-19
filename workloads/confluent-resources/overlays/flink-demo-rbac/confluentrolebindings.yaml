@@ -1,0 +1,120 @@
+# ConfluentRoleBindings for CMF RBAC Authorization
+# These role bindings grant permissions to users and groups for Flink resources
+---
+# Admin user - SystemAdmin role on CMF cluster
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: admin-systemadmin
+  namespace: kafka
+spec:
+  principal:
+    type: user
+    name: admin@osow.ski
+  role: SystemAdmin
+  clustersScopeByIds:
+    cmfId: CMF-id
+  kafkaRestClassRef:
+    name: default
+---
+# Admin user - ClusterAdmin role on CMF cluster
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: admin-clusteradmin
+  namespace: kafka
+spec:
+  principal:
+    type: user
+    name: admin@osow.ski
+  role: ClusterAdmin
+  clustersScopeByIds:
+    cmfId: CMF-id
+  kafkaRestClassRef:
+    name: default
+---
+# Shapes group - DeveloperManage role on shapes FlinkEnvironment
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: shapes-developermanage
+  namespace: kafka
+spec:
+  principal:
+    type: group
+    name: shapes
+  role: DeveloperManage
+  clustersScopeByIds:
+    cmfId: CMF-id
+    flinkEnvironmentId: shapes-env
+  # Wildcard resource pattern for all FlinkApplications in shapes-env
+  resourcePatterns:
+    - name: FlinkApplication
+      patternType: LITERAL
+      resourceType: FlinkApplication
+  kafkaRestClassRef:
+    name: default
+---
+# Shapes group - DeveloperRead role on shapes FlinkEnvironment
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: shapes-developerread
+  namespace: kafka
+spec:
+  principal:
+    type: group
+    name: shapes
+  role: DeveloperRead
+  clustersScopeByIds:
+    cmfId: CMF-id
+  # Read access to the FlinkEnvironment resource itself
+  resourcePatterns:
+    - name: shapes-env
+      patternType: LITERAL
+      resourceType: FlinkEnvironment
+  kafkaRestClassRef:
+    name: default
+---
+# Colors group - DeveloperManage role on colors FlinkEnvironment
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: colors-developermanage
+  namespace: kafka
+spec:
+  principal:
+    type: group
+    name: colors
+  role: DeveloperManage
+  clustersScopeByIds:
+    cmfId: CMF-id
+    flinkEnvironmentId: colors-env
+  # Wildcard resource pattern for all FlinkApplications in colors-env
+  resourcePatterns:
+    - name: FlinkApplication
+      patternType: LITERAL
+      resourceType: FlinkApplication
+  kafkaRestClassRef:
+    name: default
+---
+# Colors group - DeveloperRead role on colors FlinkEnvironment
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: colors-developerread
+  namespace: kafka
+spec:
+  principal:
+    type: group
+    name: colors
+  role: DeveloperRead
+  clustersScopeByIds:
+    cmfId: CMF-id
+  # Read access to the FlinkEnvironment resource itself
+  resourcePatterns:
+    - name: colors-env
+      patternType: LITERAL
+      resourceType: FlinkEnvironment
+  kafkaRestClassRef:
+    name: default

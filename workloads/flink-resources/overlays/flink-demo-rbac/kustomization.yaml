@@ -4,6 +4,15 @@ kind: Kustomization
 # Reference base configuration
 resources:
   - ../../base
+  - cfk-oauth-secret.yaml
+
+# Cluster-specific patches
+patches:
+  # Update CMFRestClass with OAuth authentication for operator
+  - path: cmfrestclass-oauth-patch.yaml
+    target:
+      kind: CMFRestClass
+      name: cmf-rest-class
 
 # Cluster-specific labels
 labels:

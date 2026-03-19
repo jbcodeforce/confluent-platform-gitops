@@ -147,3 +147,5 @@ spec:
       kind: ServiceMonitor
     - group: monitoring.coreos.com
       kind: PodMonitor
+    - group: platform.confluent.io
+      kind: ConfluentRolebinding
