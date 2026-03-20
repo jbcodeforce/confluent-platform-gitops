@@ -121,8 +121,12 @@ spec:
 
                 # Add offline_access to optional client scopes
                 echo "Configuring Control Center client scopes..."
-                OFFLINE_ACCESS_SCOPE_ID=$(curl -sf -X GET "http://keycloak:8080/admin/realms/confluent/client-scopes" \
-                  -H "Authorization: Bearer $ADMIN_TOKEN" | grep -o '"name":"offline_access","id":"[^"]*' | grep -o '"id":"[^"]*' | cut -d'"' -f4)
+                # Fetch all client scopes and find offline_access
+                SCOPES_JSON=$(curl -sf -X GET "http://keycloak:8080/admin/realms/confluent/client-scopes" \
+                  -H "Authorization: Bearer $ADMIN_TOKEN")
+
+                # Extract the ID for offline_access scope (search for the name, then extract the id from that entry)
+                OFFLINE_ACCESS_SCOPE_ID=$(echo "$SCOPES_JSON" | grep -A 5 '"name":"offline_access"' | grep -o '"id":"[^"]*' | head -1 | cut -d'"' -f4)
 
                 if [ -n "$OFFLINE_ACCESS_SCOPE_ID" ]; then
                   echo "Found offline_access scope: $OFFLINE_ACCESS_SCOPE_ID"
