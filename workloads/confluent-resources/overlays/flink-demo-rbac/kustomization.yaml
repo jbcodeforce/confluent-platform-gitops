@@ -37,6 +37,12 @@ patches:
       kind: SchemaRegistry
       name: schemaregistry
 
+  # KafkaRestClass - OAuth authentication for RBAC/MDS
+  - path: kafkarestclass-patch.yaml
+    target:
+      kind: KafkaRestClass
+      name: default
+
   # Schema Registry - ingress
   - path: schema-registry-ingress-patch.yaml
     target:
