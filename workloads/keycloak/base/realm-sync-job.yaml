@@ -50,8 +50,8 @@ spec:
               echo "Getting admin access token..."
               ADMIN_TOKEN=$(curl -sf -X POST http://keycloak:8080/realms/master/protocol/openid-connect/token \
                 -H "Content-Type: application/x-www-form-urlencoded" \
-                -d "username=admin" \
-                -d "password=admin" \
+                -d "username=flink-admin" \
+                -d "password=admin123" \
                 -d "grant_type=password" \
                 -d "client_id=admin-cli" | grep -o '"access_token":"[^"]*' | cut -d'"' -f4)
 
