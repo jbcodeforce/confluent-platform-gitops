@@ -20,7 +20,7 @@ spec:
           name: flink-demo-rbac
           domain: confluentdemo.local
         git:
-          targetRevision: "HEAD"
+          targetRevision: "feature-102/control-center-oidc-verification"
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
