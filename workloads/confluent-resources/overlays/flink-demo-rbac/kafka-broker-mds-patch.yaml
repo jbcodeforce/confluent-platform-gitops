@@ -21,7 +21,7 @@ spec:
             # Expected issuer (must match external URL)
             expectedIssuer: http://keycloak.flink-demo-rbac.confluentdemo.local:30080/realms/confluent
             # Principal claim - use email as user identifier
-            subClaimName: email
+            subClaimName: client_id
       # Impersonation settings
       impersonation:
         admins:
@@ -43,7 +43,7 @@ spec:
           tokenEndpointUri: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/token
           expectedIssuer: http://keycloak.flink-demo-rbac.confluentdemo.local:30080/realms/confluent
           jwksEndpointUri: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/certs
-          subClaimName: email
+          subClaimName: client_id
 
   # Enable RBAC authorization
   authorization:
@@ -64,7 +64,7 @@ spec:
           tokenEndpointUri: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/token
           expectedIssuer: http://keycloak.flink-demo-rbac.confluentdemo.local:30080/realms/confluent
           jwksEndpointUri: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/certs
-          subClaimName: email
+          subClaimName: client_id
 
   # JVM configuration for OAuth SASL mechanism
   configOverrides:
