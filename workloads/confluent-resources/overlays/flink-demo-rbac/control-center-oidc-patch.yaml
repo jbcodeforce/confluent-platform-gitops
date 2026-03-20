@@ -1,0 +1,33 @@
+# Control Center OIDC SSO Configuration Patch
+# Enables browser-based authentication via Keycloak OIDC
+apiVersion: platform.confluent.io/v1beta1
+kind: ControlCenter
+metadata:
+  name: controlcenter
+  namespace: kafka
+spec:
+  configOverrides:
+    server:
+      # OIDC Client Configuration
+      - confluent.controlcenter.oidc.client.id=controlcenter
+      - confluent.controlcenter.oidc.client.secret=controlcenter-secret
+
+      # OIDC Provider URLs
+      # Browser redirects use external URL
+      - confluent.controlcenter.oidc.issuer.url=http://keycloak.flink-demo-rbac.confluentdemo.local:30080/realms/confluent
+      - confluent.controlcenter.oidc.authorization.endpoint.url=http://keycloak.flink-demo-rbac.confluentdemo.local:30080/realms/confluent/protocol/openid-connect/auth
+      # Server-side token exchange uses internal DNS
+      - confluent.controlcenter.oidc.token.endpoint.url=http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/token
+      - confluent.controlcenter.oidc.jwks.endpoint.url=http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/certs
+      - confluent.controlcenter.oidc.user.endpoint.url=http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/userinfo
+
+      # OIDC Claims
+      - confluent.controlcenter.oidc.user.claim=email
+      - confluent.controlcenter.oidc.groups.claim=groups
+
+      # Redirect URI (must match Keycloak client configuration)
+      - confluent.controlcenter.oidc.redirect.url=http://controlcenter.flink-demo-rbac.confluentdemo.local:30021/login/callback
+
+      # Enable OIDC authentication
+      - confluent.controlcenter.auth.restricted.roles=Administrators,Restricted
+      - confluent.controlcenter.auth.session.expiration.ms=86400000

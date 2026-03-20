@@ -54,6 +54,12 @@ patches:
       kind: ControlCenter
       name: controlcenter
 
+  # Control Center - OIDC SSO configuration
+  - path: control-center-oidc-patch.yaml
+    target:
+      kind: ControlCenter
+      name: controlcenter
+
   # Schema Registry - resources
   - path: schema-registry-patch.yaml
     target:
