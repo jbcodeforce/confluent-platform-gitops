@@ -16,8 +16,8 @@ spec:
         # Secret containing client credentials (clientId/clientSecret)
         # CFK uses these to obtain OAuth tokens from Keycloak
         secretRef: cfk-cmf-oauth-client
-    # OAuth token endpoint configuration
-    # CFK will call this endpoint to exchange client credentials for access tokens
-    configuration:
-      tokenEndpointUri: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/token
-      subjectClaimName: client_id
+        # OAuth token endpoint configuration
+        # CFK will call this endpoint to exchange client credentials for access tokens
+        configuration:
+          tokenEndpointUri: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/token
+          subjectClaimName: client_id
