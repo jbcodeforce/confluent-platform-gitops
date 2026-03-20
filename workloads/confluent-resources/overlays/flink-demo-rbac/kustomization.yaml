@@ -57,6 +57,12 @@ patches:
       kind: SchemaRegistry
       name: schemaregistry
 
+  # Schema Registry - OAuth/RBAC configuration
+  - path: schema-registry-rbac-patch.yaml
+    target:
+      kind: SchemaRegistry
+      name: schemaregistry
+
   # Schema Registry - ingress
   - path: schema-registry-ingress-patch.yaml
     target:
