@@ -38,10 +38,6 @@ spec:
       # Enable CMF (Confluent Manager for Apache Flink)
       - confluent.controlcenter.cmf.enable=true
       - confluent.controlcenter.cmf.url=http://cmf-service.operator.svc.cluster.local:80
-      # CMF OAuth authentication
-      - confluent.controlcenter.cmf.oauth.client.id=kafka
-      - confluent.controlcenter.cmf.oauth.client.secret=${file:/mnt/secrets/kafka-oauth-client/kafka-oauth-client.txt:clientSecret}
-      - confluent.controlcenter.cmf.oauth.token.endpoint.uri=http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/token
 
   # ==============================================================================
   # AUTHORIZATION - RBAC
