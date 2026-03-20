@@ -16,7 +16,8 @@ cmf:
 
       # Expected issuer must match the external URL that clients use
       # This is what appears in the token's "iss" claim
-      oauthbearer.expected.issuer: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent
+      # Must match KC_HOSTNAME setting in Keycloak deployment
+      oauthbearer.expected.issuer: http://keycloak.flink-demo-rbac.confluentdemo.local:8080/realms/confluent
 
       # Principal claim - use email as the user identifier
       oauthbearer.sub.claim.name: email
