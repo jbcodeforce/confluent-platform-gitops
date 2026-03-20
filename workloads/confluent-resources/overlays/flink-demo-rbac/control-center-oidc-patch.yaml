@@ -1,27 +1,25 @@
 # Control Center OIDC SSO Configuration Patch
 # Enables browser-based authentication via Keycloak OIDC
+# SSO configuration is done in Kafka CR (provider.sso), this enables it in Control Center
 apiVersion: platform.confluent.io/v1beta1
 kind: ControlCenter
 metadata:
   name: controlcenter
   namespace: kafka
 spec:
-  configOverrides:
-    server:
-      # OIDC Client Configuration
-      - confluent.controlcenter.auth.oidc.client.id=controlcenter
-      - confluent.controlcenter.auth.oidc.client.secret=controlcenter-secret
-
-      # OIDC Provider URLs
-      # Browser redirects use external URL
-      - confluent.controlcenter.auth.oidc.issuer.url=http://keycloak.flink-demo-rbac.confluentdemo.local:30080/realms/confluent
-      - confluent.controlcenter.auth.oidc.authorization.endpoint=http://keycloak.flink-demo-rbac.confluentdemo.local:30080/realms/confluent/protocol/openid-connect/auth
-      # Server-side token exchange uses internal DNS
-      - confluent.controlcenter.auth.oidc.token.endpoint=http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/token
-      - confluent.controlcenter.auth.oidc.jwks.url=http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/certs
-
-      # OIDC Claims
-      - confluent.controlcenter.auth.oidc.groups.claim=groups
-
-      # Session timeout (2 hours)
-      - confluent.controlcenter.auth.session.timeout.ms=7200000
+  dependencies:
+    mds:
+      # Enable OIDC SSO protocol for browser-based authentication
+      ssoProtocol: oidc
+      # MDS endpoint (internal)
+      endpoint: http://kafka.kafka.svc.cluster.local:8090
+      # Token key pair for MDS authentication (shared public key)
+      tokenKeyPair:
+        secretRef: mds-token
+      # Control Center service account authentication to MDS
+      authentication:
+        type: oauth
+        oauth:
+          secretRef: kafka-oauth-client
+          configuration:
+            tokenEndpointUri: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/token

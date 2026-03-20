@@ -8,6 +8,7 @@ resources:
   - ../../base
   - mds-keygen-job.yaml  # Generates mds-token secret with RSA keypair
   - oauth-client-secrets.yaml
+  - oidc-client-credentials-secret.yaml  # OIDC client credentials for Control Center SSO
   - confluentrolebindings.yaml
 
 # Cluster-specific patches
@@ -26,6 +27,12 @@ patches:
 
   # Kafka broker - KRaft controller authentication
   - path: kafka-broker-kraft-auth-patch.yaml
+    target:
+      kind: Kafka
+      name: kafka
+
+  # Kafka broker - SSO/OIDC configuration for browser authentication
+  - path: kafka-broker-sso-patch.yaml
     target:
       kind: Kafka
       name: kafka
