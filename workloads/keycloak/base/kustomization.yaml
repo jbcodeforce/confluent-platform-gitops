@@ -10,4 +10,5 @@ resources:
   - realm-configmap.yaml
   - keycloak.yaml
   - realm-sync-job.yaml
+  - certificate.yaml
   - ingress.yaml

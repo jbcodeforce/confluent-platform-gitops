@@ -21,11 +21,11 @@ spec:
             groupsClaimName: groups
             # Subject claim name in ID token
             subClaimName: sub
-            # Issuer URL - must match external URL for browser redirects (HTTPS via IngressRoute)
+            # Issuer URL - must match external URL for browser redirects (HTTPS via IngressRoute with TLS)
             issuer: https://keycloak.flink-demo-rbac.confluentdemo.local/realms/confluent
-            # JWKS endpoint - uses internal DNS for server-side validation
+            # JWKS endpoint - uses internal DNS for server-side validation (no TLS)
             jwksEndpointUri: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/certs
-            # Authorization endpoint - external URL for browser redirects (HTTPS via IngressRoute)
+            # Authorization endpoint - external URL for browser redirects (HTTPS via IngressRoute with TLS)
             authorizeBaseEndpointUri: https://keycloak.flink-demo-rbac.confluentdemo.local/realms/confluent/protocol/openid-connect/auth
             # Token endpoint - internal DNS for server-side token exchange
             tokenBaseEndpointUri: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/token
