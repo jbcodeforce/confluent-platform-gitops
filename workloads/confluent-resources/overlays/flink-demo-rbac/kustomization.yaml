@@ -7,6 +7,7 @@ namespace: kafka
 resources:
   - ../../base
   - mds-keygen-job.yaml  # Generates mds-token secret with RSA keypair
+  - mds-token-copy-job.yaml  # Copies MDS public key to operator namespace for CMF
   - oauth-client-secrets.yaml
   - oidc-client-credentials-secret.yaml  # OIDC client credentials for Control Center SSO
   - controlcenter-oauth-client-secret.yaml  # OAuth client credentials for Control Center service account
