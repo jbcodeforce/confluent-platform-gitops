@@ -66,8 +66,8 @@ spec:
   authorization:
     type: rbac
     superUsers:
-      - User:kafka
       - User:admin@osow.ski
+      - User:kafka
 
   # ==============================================================================
   # MDS (METADATA SERVICE) - RBAC and SSO/OIDC configuration
