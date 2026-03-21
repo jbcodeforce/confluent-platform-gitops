@@ -12,7 +12,7 @@ spec:
   source:
     repoURL: https://emberstack.github.io/helm-charts
     chart: reflector
-    targetRevision: HEAD
+    targetRevision: feature-89/flink-environments-and-applications
     helm:
       values: |
         # Reflector - Kubernetes Secret/ConfigMap replication controller

@@ -12,13 +12,13 @@ spec:
   project: infrastructure
   sources:
     - repoURL: https://prometheus-community.github.io/helm-charts
-      targetRevision: 81.6.1 # Pin to specific version
+      targetRevision: feature-89/flink-environments-and-applications # Pin to specific version
       chart: kube-prometheus-stack
       helm:
         valueFiles:
           - $values/infrastructure/kube-prometheus-stack-crds/base/values.yaml
     - repoURL: https://github.com/osowski/confluent-platform-gitops.git
-      targetRevision: HEAD
+      targetRevision: feature-89/flink-environments-and-applications
       ref: values
   destination:
     server: https://kubernetes.default.svc

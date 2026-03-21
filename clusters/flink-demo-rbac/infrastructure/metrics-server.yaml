@@ -12,7 +12,7 @@ spec:
   project: infrastructure
   sources:
     - repoURL: https://kubernetes-sigs.github.io/metrics-server/
-      targetRevision: 3.12.2 # Pin to specific version
+      targetRevision: feature-89/flink-environments-and-applications # Pin to specific version
       chart: metrics-server
       helm:
         ignoreMissingValueFiles: true
@@ -20,7 +20,7 @@ spec:
           - $values/infrastructure/metrics-server/base/values.yaml
           - $values/infrastructure/metrics-server/overlays/flink-demo-rbac/values.yaml
     - repoURL: https://github.com/osowski/confluent-platform-gitops.git
-      targetRevision: HEAD
+      targetRevision: feature-89/flink-environments-and-applications
       ref: values
   destination:
     server: https://kubernetes.default.svc
