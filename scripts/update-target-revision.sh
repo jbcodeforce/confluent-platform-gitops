@@ -182,16 +182,31 @@ update_files() {
             # Get current revision(s)
             local current_revision
             local current_helm_revision
+            local current_github_revisions
             current_revision=$(yq eval '.spec.source.targetRevision // ""' "$file" 2>/dev/null | head -1)
             current_helm_revision=$(yq eval '.spec.source.helm.valuesObject.git.targetRevision // ""' "$file" 2>/dev/null)
 
-            # Skip if already at target revision for both fields
+            # For multi-source, get GitHub repository targetRevisions
+            if [ "$has_sources" = "true" ]; then
+                current_github_revisions=$(yq eval '.spec.sources[] | select(.repoURL | contains("github")) | .targetRevision' "$file" 2>/dev/null)
+            fi
+
+            # Skip if already at target revision for all fields
             local needs_update=false
             if [ -n "$current_revision" ] && [ "$current_revision" != "$new_revision" ]; then
                 needs_update=true
             fi
             if [ -n "$current_helm_revision" ] && [ "$current_helm_revision" != "$new_revision" ]; then
                 needs_update=true
+            fi
+            # Check multi-source GitHub repositories
+            if [ -n "$current_github_revisions" ]; then
+                while IFS= read -r rev; do
+                    if [ -n "$rev" ] && [ "$rev" != "$new_revision" ]; then
+                        needs_update=true
+                        break
+                    fi
+                done <<< "$current_github_revisions"
             fi
 
             if [ "$needs_update" = "false" ]; then
