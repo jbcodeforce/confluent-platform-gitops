@@ -112,6 +112,7 @@ spec:
         admins:
           - User:kafka
           - User:krp                        # Kafka REST Proxy principal
+          - User:cmf                        # CMF service principal for user authorization
           - User:admin@osow.ski             # Admin user from Keycloak
         protectedUsers:
           - User:mds
