@@ -1,9 +1,9 @@
-# FlinkApplication for shapes group - WordCount example
+# FlinkApplication for shapes group - StateMachine example
 # Deployed in flink-shapes namespace, accessible only to shapes group members
 apiVersion: platform.confluent.io/v1beta1
 kind: FlinkApplication
 metadata:
-  name: shapes-wordcount
+  name: shapes-statemachine
   namespace: flink-shapes
 spec:
   # Reference to FlinkEnvironment
@@ -37,7 +37,7 @@ spec:
 
   # Job configuration
   job:
-    jarURI: local:///opt/flink/examples/streaming/WordCount.jar
+    jarURI: local:///opt/flink/examples/streaming/StateMachineExample.jar
     parallelism: 2
     upgradeMode: stateless
     state: running
