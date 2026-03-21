@@ -4,3 +4,11 @@
 # Additional pod annotations for flink-demo-rbac cluster identification
 podAnnotations:
   cluster: flink-demo-rbac
+
+# Watch additional namespaces for group-based Flink resources
+namespaceList:
+  - flink
+  - flink-shapes
+  - flink-colors
+  - kafka
+  - operator
