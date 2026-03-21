@@ -1,0 +1,23 @@
+# FlinkEnvironment for colors group
+# RBAC: colors group has DeveloperManage access to this environment
+apiVersion: platform.confluent.io/v1beta1
+kind: FlinkEnvironment
+metadata:
+  name: colors-env
+  namespace: flink-colors
+spec:
+  kubernetesNamespace: flink-colors
+
+  # Reference to CMFRestClass in flink namespace (cross-namespace reference)
+  cmfRestClassRef:
+    name: cmf-rest-class
+    namespace: flink
+
+  # Default resource configuration for Flink applications
+  flinkApplicationDefaults:
+    spec:
+      flinkConfiguration:
+        taskmanager.numberOfTaskSlots: "2"
+        metrics.reporter.prom.factory.class: "org.apache.flink.metrics.prometheus.PrometheusReporterFactory"
+        metrics.reporter.prom.port: "9249-9250"
+        rest.profiling.enabled: "true"

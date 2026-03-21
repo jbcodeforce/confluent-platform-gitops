@@ -1,0 +1,42 @@
+# FlinkApplication for shapes group - WordCount example
+# Deployed in flink-shapes namespace, accessible only to shapes group members
+apiVersion: platform.confluent.io/v1beta1
+kind: FlinkApplication
+metadata:
+  name: shapes-wordcount
+  namespace: flink-shapes
+spec:
+  # Reference to FlinkEnvironment
+  flinkEnvironment: shapes-env
+
+  # Flink version
+  flinkVersion: v1_20
+
+  # Flink Docker image
+  image: confluentinc/cp-flink:1.20.3-cp1
+
+  # JobManager configuration
+  jobManager:
+    resource:
+      memory: "1048m"
+      cpu: 1
+
+  # TaskManager configuration
+  taskManager:
+    resource:
+      memory: "1048m"
+      cpu: 1
+
+  # ServiceAccount for Flink pods
+  serviceAccount: flink
+
+  # Job configuration
+  job:
+    jarURI: local:///opt/flink/examples/streaming/WordCount.jar
+    parallelism: 2
+    upgradeMode: stateless
+    state: running
+
+  # Flink configuration overrides
+  flinkConfiguration:
+    taskmanager.numberOfTaskSlots: "2"

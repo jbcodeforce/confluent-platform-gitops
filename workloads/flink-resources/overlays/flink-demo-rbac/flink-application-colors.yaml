@@ -1,0 +1,42 @@
+# FlinkApplication for colors group - StateMachine example
+# Deployed in flink-colors namespace, accessible only to colors group members
+apiVersion: platform.confluent.io/v1beta1
+kind: FlinkApplication
+metadata:
+  name: colors-statemachine
+  namespace: flink-colors
+spec:
+  # Reference to FlinkEnvironment
+  flinkEnvironment: colors-env
+
+  # Flink version
+  flinkVersion: v1_20
+
+  # Flink Docker image
+  image: confluentinc/cp-flink:1.20.3-cp1
+
+  # JobManager configuration
+  jobManager:
+    resource:
+      memory: "1048m"
+      cpu: 1
+
+  # TaskManager configuration
+  taskManager:
+    resource:
+      memory: "1048m"
+      cpu: 1
+
+  # ServiceAccount for Flink pods
+  serviceAccount: flink
+
+  # Job configuration
+  job:
+    jarURI: local:///opt/flink/examples/streaming/StateMachineExample.jar
+    parallelism: 3
+    upgradeMode: stateless
+    state: running
+
+  # Flink configuration overrides
+  flinkConfiguration:
+    taskmanager.numberOfTaskSlots: "2"
