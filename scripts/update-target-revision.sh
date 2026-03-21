@@ -132,6 +132,17 @@ preview_changes() {
     while IFS= read -r file; do
         # Check if file has targetRevision field
         if yq eval 'has("spec")' "$file" 2>/dev/null | grep -q "true"; then
+            # Skip single-source Helm charts (external Helm repositories)
+            local has_source
+            local has_chart
+            has_source=$(yq eval 'has("spec") and .spec | has("source")' "$file" 2>/dev/null)
+            if [ "$has_source" = "true" ]; then
+                has_chart=$(yq eval '.spec.source | has("chart")' "$file" 2>/dev/null)
+                if [ "$has_chart" = "true" ]; then
+                    continue
+                fi
+            fi
+
             local current_revision
             local current_helm_revision
             current_revision=$(yq eval '.spec.source.targetRevision // ""' "$file" 2>/dev/null | head -1)
@@ -189,6 +200,17 @@ update_files() {
             # For multi-source, get git source targetRevisions (sources with ref: values)
             if [ "$has_sources" = "true" ]; then
                 current_github_revisions=$(yq eval '.spec.sources[] | select(has("ref")) | .targetRevision' "$file" 2>/dev/null)
+            fi
+
+            # Skip single-source Helm charts (external Helm repositories)
+            # Only update git sources or multi-source Applications
+            if [ "$has_source" = "true" ]; then
+                local has_chart
+                has_chart=$(yq eval '.spec.source | has("chart")' "$file" 2>/dev/null)
+                if [ "$has_chart" = "true" ]; then
+                    skipped_count=$((skipped_count + 1))
+                    continue
+                fi
             fi
 
             # Skip if already at target revision for all fields
@@ -292,7 +314,14 @@ verify_update() {
                     fi
                 done <<< "$github_revisions"
             fi
-        else
+        elif [ "$has_source" = "true" ]; then
+            # Single-source: skip Helm chart Applications (external Helm repositories)
+            local has_chart
+            has_chart=$(yq eval '.spec.source | has("chart")' "$file" 2>/dev/null)
+            if [ "$has_chart" = "true" ]; then
+                # Skip Helm chart Applications - they use chart versions, not git branches
+                continue
+            fi
             # Single-source: check both spec.source.targetRevision and helm values
             local current_revision
             local current_helm_revision
