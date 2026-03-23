@@ -24,16 +24,17 @@ cmf:
   # Database configuration - Use PostgreSQL instead of embedded SQLite
   # SQLite has severe lock contention issues under concurrent operations
   database:
-    type: postgres
+    type: jdbc
     jdbc:
       engine: postgresql
       database: cmf
-      url: jdbc:postgresql://cmf-postgres.operator.svc.cluster.local:5432/cmf
+      url: cmf-postgres.operator.svc.cluster.local
       user: cmf
       password:
         kubernetesSecretName: cmf-postgres-credentials
         kubernetesSecretProperty: POSTGRES_PASSWORD
       port: 5432
+      options: ""
 
   authentication:
     type: oauth
