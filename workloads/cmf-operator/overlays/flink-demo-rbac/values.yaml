@@ -18,6 +18,9 @@ env:
 # Validates bearer tokens from Keycloak for incoming client requests
 # IMPORTANT: CMF validates MDS-signed tokens using the MDS public key
 cmf:
+  # Enable stack traces in error responses for debugging authorization issues
+  stackTraceLogging: true
+
   authentication:
     type: oauth
     config:
