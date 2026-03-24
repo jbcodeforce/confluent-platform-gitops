@@ -15,7 +15,7 @@ spec:
     namespace: flink
 
   # Flink version
-  flinkVersion: v1_20
+  flinkVersion: v2_1
 
   # Flink Docker image with bundled application JAR
   image: quay.io/osowski/flink-kafka-demo:2.1.1-202603231630
