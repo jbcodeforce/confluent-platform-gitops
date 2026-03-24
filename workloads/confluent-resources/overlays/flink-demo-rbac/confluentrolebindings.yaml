@@ -298,6 +298,120 @@ spec:
     name: default
 ---
 # ==============================================================================
+# SERVICE ACCOUNT RBAC - Flink service account permissions
+# ==============================================================================
+# Service accounts need direct user-level permissions because MDS identifies
+# principals by client_id claim, not by group membership for authorization.
+#
+# sa-shapes-flink service account - ResourceOwner on shapes-* topics
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: sa-shapes-flink-topics-owner
+  namespace: kafka
+spec:
+  principal:
+    type: user
+    name: sa-shapes-flink
+  role: ResourceOwner
+  resourcePatterns:
+    - patternType: PREFIXED
+      name: shapes-
+      resourceType: Topic
+  kafkaRestClassRef:
+    name: default
+---
+# sa-colors-flink service account - ResourceOwner on colors-* topics
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: sa-colors-flink-topics-owner
+  namespace: kafka
+spec:
+  principal:
+    type: user
+    name: sa-colors-flink
+  role: ResourceOwner
+  resourcePatterns:
+    - patternType: PREFIXED
+      name: colors-
+      resourceType: Topic
+  kafkaRestClassRef:
+    name: default
+---
+# sa-shapes-flink service account - ResourceOwner on shapes-* consumer groups
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: sa-shapes-flink-consumergroups-owner
+  namespace: kafka
+spec:
+  principal:
+    type: user
+    name: sa-shapes-flink
+  role: ResourceOwner
+  resourcePatterns:
+    - patternType: PREFIXED
+      name: shapes-
+      resourceType: Group
+  kafkaRestClassRef:
+    name: default
+---
+# sa-colors-flink service account - ResourceOwner on colors-* consumer groups
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: sa-colors-flink-consumergroups-owner
+  namespace: kafka
+spec:
+  principal:
+    type: user
+    name: sa-colors-flink
+  role: ResourceOwner
+  resourcePatterns:
+    - patternType: PREFIXED
+      name: colors-
+      resourceType: Group
+  kafkaRestClassRef:
+    name: default
+---
+# sa-shapes-flink service account - ResourceOwner on shapes-* transactional IDs
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: sa-shapes-flink-transactionalids-owner
+  namespace: kafka
+spec:
+  principal:
+    type: user
+    name: sa-shapes-flink
+  role: ResourceOwner
+  resourcePatterns:
+    - patternType: PREFIXED
+      name: shapes-
+      resourceType: TransactionalId
+  kafkaRestClassRef:
+    name: default
+---
+# sa-colors-flink service account - ResourceOwner on colors-* transactional IDs
+apiVersion: platform.confluent.io/v1beta1
+kind: ConfluentRolebinding
+metadata:
+  name: sa-colors-flink-transactionalids-owner
+  namespace: kafka
+spec:
+  principal:
+    type: user
+    name: sa-colors-flink
+  role: ResourceOwner
+  resourcePatterns:
+    - patternType: PREFIXED
+      name: colors-
+      resourceType: TransactionalId
+  kafkaRestClassRef:
+    name: default
+---
+# ==============================================================================
 # SCHEMA REGISTRY RBAC - Handled by Kafka RBAC + MDS integration
 # ==============================================================================
 # NOTE: Subject resources cannot be scoped at the Kafka cluster level with
