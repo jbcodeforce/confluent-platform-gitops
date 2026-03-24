@@ -74,11 +74,11 @@ spec:
     kafka.sasl.mechanism: OAUTHBEARER
 
     # JAAS configuration for OAuth authentication
-    # Uses environment variables injected via podTemplate
+    # Hardcoded credentials for demo environment (service account created by Keycloak job)
     kafka.sasl.jaas.config: |
       org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required
-      clientId="${env:KAFKA_OAUTH_CLIENT_ID}"
-      clientSecret="${env:KAFKA_OAUTH_CLIENT_SECRET}"
+      clientId="sa-shapes-flink"
+      clientSecret="sa-shapes-flink-secret"
       tokenEndpointUri="http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/token";
 
     # OAuth callback handler
