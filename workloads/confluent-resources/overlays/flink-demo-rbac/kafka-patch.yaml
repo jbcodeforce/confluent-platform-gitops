@@ -168,3 +168,7 @@ spec:
       # Enable CLI SSO using OAuth device grant flow (for confluent login)
       # Uses internal HTTP URL - MDS needs to reach Keycloak from within the cluster
       - confluent.oidc.idp.device.authorization.endpoint.uri=http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/auth/device
+
+      # Internal listener OAuth groups claim extraction
+      # Required for group-based RBAC authorization (e.g., FlinkApplications with service accounts in groups)
+      - listener.name.internal.sasl.oauthbearer.groups.claim.name=groups
