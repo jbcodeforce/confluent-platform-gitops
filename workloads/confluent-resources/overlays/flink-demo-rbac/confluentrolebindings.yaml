@@ -241,91 +241,20 @@ spec:
     name: default
 ---
 # ==============================================================================
-# FLINK SQL CATALOG & DATABASE RBAC - Group-based access control
+# FLINK SQL CATALOG & DATABASE RBAC - Handled by FlinkEnvironment permissions
 # ==============================================================================
-# Shapes group - DeveloperManage on shapes-catalog
-# Allows shapes group users to view and manage shapes-catalog in Flink SQL editor
-apiVersion: platform.confluent.io/v1beta1
-kind: ConfluentRolebinding
-metadata:
-  name: shapes-catalog-owner
-  namespace: kafka
-spec:
-  principal:
-    type: group
-    name: shapes
-  role: DeveloperManage
-  clustersScopeByIds:
-    cmfId: CMF-id
-  resourcePatterns:
-    - patternType: LITERAL
-      name: shapes-catalog
-      resourceType: KafkaCatalog
-  kafkaRestClassRef:
-    name: default
----
-# Shapes group - DeveloperManage on shapes-database
-# Allows shapes group users to view and manage shapes-database in Flink SQL editor
-apiVersion: platform.confluent.io/v1beta1
-kind: ConfluentRolebinding
-metadata:
-  name: shapes-database-owner
-  namespace: kafka
-spec:
-  principal:
-    type: group
-    name: shapes
-  role: DeveloperManage
-  clustersScopeByIds:
-    cmfId: CMF-id
-  resourcePatterns:
-    - patternType: LITERAL
-      name: shapes-database
-      resourceType: KafkaDatabase
-  kafkaRestClassRef:
-    name: default
----
-# Colors group - DeveloperManage on colors-catalog
-# Allows colors group users to view and manage colors-catalog in Flink SQL editor
-apiVersion: platform.confluent.io/v1beta1
-kind: ConfluentRolebinding
-metadata:
-  name: colors-catalog-owner
-  namespace: kafka
-spec:
-  principal:
-    type: group
-    name: colors
-  role: DeveloperManage
-  clustersScopeByIds:
-    cmfId: CMF-id
-  resourcePatterns:
-    - patternType: LITERAL
-      name: colors-catalog
-      resourceType: KafkaCatalog
-  kafkaRestClassRef:
-    name: default
----
-# Colors group - DeveloperManage on colors-database
-# Allows colors group users to view and manage colors-database in Flink SQL editor
-apiVersion: platform.confluent.io/v1beta1
-kind: ConfluentRolebinding
-metadata:
-  name: colors-database-owner
-  namespace: kafka
-spec:
-  principal:
-    type: group
-    name: colors
-  role: DeveloperManage
-  clustersScopeByIds:
-    cmfId: CMF-id
-  resourcePatterns:
-    - patternType: LITERAL
-      name: colors-database
-      resourceType: KafkaDatabase
-  kafkaRestClassRef:
-    name: default
+# NOTE: KafkaCatalog and KafkaDatabase are CMF-managed resources, not valid
+# Kafka RBAC resource types. Access to these resources is granted through
+# FlinkEnvironment permissions (shapes-developermanage-env, colors-developermanage-env).
+#
+# Databases specify alterEnvironments: ["shapes-env"|"colors-env"], which grants
+# access to users with DeveloperManage role on those environments.
+#
+# Removed rolebindings (were in ERROR state):
+#   - shapes-catalog-owner (KafkaCatalog - invalid resource type)
+#   - shapes-database-owner (KafkaDatabase - invalid resource type)
+#   - colors-catalog-owner (KafkaCatalog - invalid resource type)
+#   - colors-database-owner (KafkaDatabase - invalid resource type)
 ---
 # ==============================================================================
 # KAFKA TOPIC RBAC - Group-based topic access control
@@ -369,45 +298,22 @@ spec:
     name: default
 ---
 # ==============================================================================
-# SCHEMA REGISTRY RBAC - Group-based schema access control
+# SCHEMA REGISTRY RBAC - Handled by Kafka RBAC + MDS integration
 # ==============================================================================
-# Shapes group - ResourceOwner on shapes-* subjects
-# Allows shapes group users to create, read, update, and delete schemas with shapes- prefix
-apiVersion: platform.confluent.io/v1beta1
-kind: ConfluentRolebinding
-metadata:
-  name: shapes-subjects-owner
-  namespace: kafka
-spec:
-  principal:
-    type: group
-    name: shapes
-  role: ResourceOwner
-  resourcePatterns:
-    - patternType: PREFIXED
-      name: shapes-
-      resourceType: Subject
-  kafkaRestClassRef:
-    name: default
----
-# Colors group - ResourceOwner on colors-* subjects
-# Allows colors group users to create, read, update, and delete schemas with colors- prefix
-apiVersion: platform.confluent.io/v1beta1
-kind: ConfluentRolebinding
-metadata:
-  name: colors-subjects-owner
-  namespace: kafka
-spec:
-  principal:
-    type: group
-    name: colors
-  role: ResourceOwner
-  resourcePatterns:
-    - patternType: PREFIXED
-      name: colors-
-      resourceType: Subject
-  kafkaRestClassRef:
-    name: default
+# NOTE: Subject resources cannot be scoped at the Kafka cluster level with
+# Confluent RBAC. Schema Registry subjects are accessed via MDS (Metadata Service)
+# which evaluates authorization based on Kafka topic permissions.
+#
+# Subject access is granted through topic-level permissions:
+#   - shapes-topics-owner grants access to shapes-* subjects
+#   - colors-topics-owner grants access to colors-* subjects
+#
+# MDS evaluates the principal's Kafka RBAC permissions when accessing subjects
+# via Schema Registry. No separate Subject rolebindings are needed.
+#
+# Removed rolebindings (were in ERROR state - invalid scope):
+#   - shapes-subjects-owner (Subject + kafkaRestClassRef scope - invalid combination)
+#   - colors-subjects-owner (Subject + kafkaRestClassRef scope - invalid combination)
 ---
 # ==============================================================================
 # CONSUMER GROUP RBAC - Required for Flink SQL and streaming applications
