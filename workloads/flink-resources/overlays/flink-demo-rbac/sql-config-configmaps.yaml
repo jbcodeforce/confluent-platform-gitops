@@ -19,7 +19,8 @@ data:
         "srInstance": {
           "connectionConfig": {
             "schema.registry.url": "http://schemaregistry.kafka.svc.cluster.local:8081"
-          }
+          },
+          "connectionSecretId": "sr-oauth-secret-id-shapes"
         }
       }
     }
@@ -140,7 +141,8 @@ data:
         "srInstance": {
           "connectionConfig": {
             "schema.registry.url": "http://schemaregistry.kafka.svc.cluster.local:8081"
-          }
+          },
+          "connectionSecretId": "sr-oauth-secret-id-colors"
         }
       }
     }

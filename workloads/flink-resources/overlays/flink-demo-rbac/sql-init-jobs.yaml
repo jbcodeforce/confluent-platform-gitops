@@ -72,7 +72,7 @@ spec:
                 echo "[1/5] Secret kafka-oauth-secret-shapes already exists (HTTP ${SECRET_EXISTS})"
               fi
 
-              echo "[2/5] Creating secret mapping: kafka-conn-secret-id-shapes -> kafka-oauth-secret-shapes"
+              echo "[2/7] Creating secret mapping: kafka-conn-secret-id-shapes -> kafka-oauth-secret-shapes"
               RESPONSE=$(curl --silent -w "\n%{http_code}" -H "Content-Type: application/json" \
                 -H "Authorization: Bearer ${ACCESS_TOKEN}" \
                 -X POST ${CMF_URL}/environments/shapes-env/secret-mappings \
@@ -84,7 +84,40 @@ spec:
                 echo "  -> Error: $RESPONSE_BODY"
               fi
 
-              echo "[3/5] Creating KafkaCatalog: shapes-catalog"
+              echo "Checking if sr-oauth-secret-shapes exists..."
+              SECRET_EXISTS=$(curl -s -o /dev/null -w "%{http_code}" \
+                -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+                -X GET ${CMF_URL}/secrets/sr-oauth-secret-shapes)
+
+              if [ "${SECRET_EXISTS}" = "404" ]; then
+                echo "[3/7] Creating CMF Secret: sr-oauth-secret-shapes"
+                RESPONSE=$(curl --silent -w "\n%{http_code}" -H "Content-Type: application/json" \
+                  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+                  -X POST ${CMF_URL}/secrets \
+                  -d @/config/sr-secret/secret.json)
+                HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+                RESPONSE_BODY=$(echo "$RESPONSE" | head -n -1)
+                echo "  -> HTTP $HTTP_CODE"
+                if [ "$HTTP_CODE" != "200" ] && [ "$HTTP_CODE" != "201" ]; then
+                  echo "  -> Error: $RESPONSE_BODY"
+                fi
+              else
+                echo "[3/7] Secret sr-oauth-secret-shapes already exists (HTTP ${SECRET_EXISTS})"
+              fi
+
+              echo "[4/7] Creating secret mapping: sr-oauth-secret-id-shapes -> sr-oauth-secret-shapes"
+              RESPONSE=$(curl --silent -w "\n%{http_code}" -H "Content-Type: application/json" \
+                -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+                -X POST ${CMF_URL}/environments/shapes-env/secret-mappings \
+                -d @/config/sr-secret-mapping/secret-mapping.json)
+              HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+              RESPONSE_BODY=$(echo "$RESPONSE" | head -n -1)
+              echo "  -> HTTP $HTTP_CODE"
+              if [ "$HTTP_CODE" != "200" ] && [ "$HTTP_CODE" != "201" ]; then
+                echo "  -> Error: $RESPONSE_BODY"
+              fi
+
+              echo "[5/7] Creating KafkaCatalog: shapes-catalog"
               RESPONSE=$(curl --silent -w "\n%{http_code}" -H "Content-Type: application/json" \
                 -H "Authorization: Bearer ${ACCESS_TOKEN}" \
                 -X POST ${CMF_URL}/catalogs/kafka \
@@ -96,7 +129,7 @@ spec:
                 echo "  -> Error: $RESPONSE_BODY"
               fi
 
-              echo "[4/5] Creating KafkaDatabase: shapes-database in shapes-catalog"
+              echo "[6/7] Creating KafkaDatabase: shapes-database in shapes-catalog"
               RESPONSE=$(curl --silent -w "\n%{http_code}" -H "Content-Type: application/json" \
                 -H "Authorization: Bearer ${ACCESS_TOKEN}" \
                 -X POST ${CMF_URL}/catalogs/kafka/shapes-catalog/databases \
@@ -108,7 +141,7 @@ spec:
                 echo "  -> Error: $RESPONSE_BODY"
               fi
 
-              echo "[5/5] Creating ComputePool: shapes-pool in shapes-env"
+              echo "[7/7] Creating ComputePool: shapes-pool in shapes-env"
               RESPONSE=$(curl --silent -w "\n%{http_code}" -H "Content-Type: application/json" \
                 -H "Authorization: Bearer ${ACCESS_TOKEN}" \
                 -X POST ${CMF_URL}/environments/shapes-env/compute-pools \
@@ -133,6 +166,10 @@ spec:
               mountPath: /config/secret
             - name: secret-mapping-config
               mountPath: /config/secret-mapping
+            - name: sr-secret-config
+              mountPath: /config/sr-secret
+            - name: sr-secret-mapping-config
+              mountPath: /config/sr-secret-mapping
       volumes:
         - name: catalog-config
           configMap:
@@ -149,6 +186,12 @@ spec:
         - name: secret-mapping-config
           configMap:
             name: shapes-secret-mapping-config
+        - name: sr-secret-config
+          configMap:
+            name: sr-oauth-secret-config
+        - name: sr-secret-mapping-config
+          configMap:
+            name: shapes-sr-secret-mapping-config
 ---
 # Colors SQL Initialization Job
 apiVersion: batch/v1
@@ -221,7 +264,7 @@ spec:
                 echo "[1/5] Secret kafka-oauth-secret-colors already exists (HTTP ${SECRET_EXISTS})"
               fi
 
-              echo "[2/5] Creating secret mapping: kafka-conn-secret-id-colors -> kafka-oauth-secret-colors"
+              echo "[2/7] Creating secret mapping: kafka-conn-secret-id-colors -> kafka-oauth-secret-colors"
               RESPONSE=$(curl --silent -w "\n%{http_code}" -H "Content-Type: application/json" \
                 -H "Authorization: Bearer ${ACCESS_TOKEN}" \
                 -X POST ${CMF_URL}/environments/colors-env/secret-mappings \
@@ -233,7 +276,40 @@ spec:
                 echo "  -> Error: $RESPONSE_BODY"
               fi
 
-              echo "[3/5] Creating KafkaCatalog: colors-catalog"
+              echo "Checking if sr-oauth-secret-colors exists..."
+              SECRET_EXISTS=$(curl -s -o /dev/null -w "%{http_code}" \
+                -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+                -X GET ${CMF_URL}/secrets/sr-oauth-secret-colors)
+
+              if [ "${SECRET_EXISTS}" = "404" ]; then
+                echo "[3/7] Creating CMF Secret: sr-oauth-secret-colors"
+                RESPONSE=$(curl --silent -w "\n%{http_code}" -H "Content-Type: application/json" \
+                  -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+                  -X POST ${CMF_URL}/secrets \
+                  -d @/config/sr-secret/secret.json)
+                HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+                RESPONSE_BODY=$(echo "$RESPONSE" | head -n -1)
+                echo "  -> HTTP $HTTP_CODE"
+                if [ "$HTTP_CODE" != "200" ] && [ "$HTTP_CODE" != "201" ]; then
+                  echo "  -> Error: $RESPONSE_BODY"
+                fi
+              else
+                echo "[3/7] Secret sr-oauth-secret-colors already exists (HTTP ${SECRET_EXISTS})"
+              fi
+
+              echo "[4/7] Creating secret mapping: sr-oauth-secret-id-colors -> sr-oauth-secret-colors"
+              RESPONSE=$(curl --silent -w "\n%{http_code}" -H "Content-Type: application/json" \
+                -H "Authorization: Bearer ${ACCESS_TOKEN}" \
+                -X POST ${CMF_URL}/environments/colors-env/secret-mappings \
+                -d @/config/sr-secret-mapping/secret-mapping.json)
+              HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+              RESPONSE_BODY=$(echo "$RESPONSE" | head -n -1)
+              echo "  -> HTTP $HTTP_CODE"
+              if [ "$HTTP_CODE" != "200" ] && [ "$HTTP_CODE" != "201" ]; then
+                echo "  -> Error: $RESPONSE_BODY"
+              fi
+
+              echo "[5/7] Creating KafkaCatalog: colors-catalog"
               RESPONSE=$(curl --silent -w "\n%{http_code}" -H "Content-Type: application/json" \
                 -H "Authorization: Bearer ${ACCESS_TOKEN}" \
                 -X POST ${CMF_URL}/catalogs/kafka \
@@ -245,7 +321,7 @@ spec:
                 echo "  -> Error: $RESPONSE_BODY"
               fi
 
-              echo "[4/5] Creating KafkaDatabase: colors-database in colors-catalog"
+              echo "[6/7] Creating KafkaDatabase: colors-database in colors-catalog"
               RESPONSE=$(curl --silent -w "\n%{http_code}" -H "Content-Type: application/json" \
                 -H "Authorization: Bearer ${ACCESS_TOKEN}" \
                 -X POST ${CMF_URL}/catalogs/kafka/colors-catalog/databases \
@@ -257,7 +333,7 @@ spec:
                 echo "  -> Error: $RESPONSE_BODY"
               fi
 
-              echo "[5/5] Creating ComputePool: colors-pool in colors-env"
+              echo "[7/7] Creating ComputePool: colors-pool in colors-env"
               RESPONSE=$(curl --silent -w "\n%{http_code}" -H "Content-Type: application/json" \
                 -H "Authorization: Bearer ${ACCESS_TOKEN}" \
                 -X POST ${CMF_URL}/environments/colors-env/compute-pools \
@@ -282,6 +358,10 @@ spec:
               mountPath: /config/secret
             - name: secret-mapping-config
               mountPath: /config/secret-mapping
+            - name: sr-secret-config
+              mountPath: /config/sr-secret
+            - name: sr-secret-mapping-config
+              mountPath: /config/sr-secret-mapping
       volumes:
         - name: catalog-config
           configMap:
@@ -298,3 +378,9 @@ spec:
         - name: secret-mapping-config
           configMap:
             name: colors-secret-mapping-config
+        - name: sr-secret-config
+          configMap:
+            name: sr-oauth-secret-config
+        - name: sr-secret-mapping-config
+          configMap:
+            name: colors-sr-secret-mapping-config

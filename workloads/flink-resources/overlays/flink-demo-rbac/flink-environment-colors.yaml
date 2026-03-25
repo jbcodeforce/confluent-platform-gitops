@@ -27,9 +27,10 @@ spec:
 
         # Schema Registry OAuth bearer authentication
         table.sql-catalog.confluent.schema-registry.bearer.auth.credentials.source: "OAUTHBEARER"
-        table.sql-catalog.confluent.schema-registry.bearer.auth.issuer.endpoint.url: "http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/token"
+        table.sql-catalog.confluent.schema-registry.bearer.auth.token.endpoint.url: "http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/token"
         table.sql-catalog.confluent.schema-registry.bearer.auth.client.id: "sa-colors-flink"
         table.sql-catalog.confluent.schema-registry.bearer.auth.client.secret: "sa-colors-flink-secret"
-        table.sql-catalog.confluent.schema-registry.bearer.auth.scope: ""
-        table.sql-catalog.confluent.schema-registry.bearer.auth.logical.cluster: ""
-        table.sql-catalog.confluent.schema-registry.bearer.auth.identity.pool.id: ""
+        #CC-specific settings
+        #table.sql-catalog.confluent.schema-registry.bearer.auth.scope: ""
+        #table.sql-catalog.confluent.schema-registry.bearer.auth.logical.cluster: ""
+        #table.sql-catalog.confluent.schema-registry.bearer.auth.identity.pool.id: ""

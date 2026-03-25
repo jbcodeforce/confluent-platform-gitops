@@ -18,8 +18,8 @@ spec:
   flinkVersion: v2_1
 
   # Flink Docker image with bundled application JAR
-  # Updated to include Flink configuration property support for OAuth/SASL
-  image: quay.io/osowski/flink-kafka-demo:2.1.1-202603241000
+  # Updated to include Avro schema support with Schema Registry integration
+  image: quay.io/osowski/flink-kafka-demo:2.1.1-202603240800
 
   # ServiceAccount for Kubernetes RBAC
   serviceAccount: flink
@@ -64,6 +64,9 @@ spec:
               value: shapes-input
             - name: KAFKA_OUTPUT_TOPIC
               value: shapes-output
+            # Schema Registry URL
+            - name: SCHEMA_REGISTRY_URL
+              value: "http://schemaregistry.kafka.svc.cluster.local:8081"
             # S3 credentials from reflected secret
             - name: AWS_ACCESS_KEY_ID
               valueFrom:
@@ -99,6 +102,16 @@ spec:
 
     # OAuth token endpoint URL (required for OAuth callback handler)
     kafka.sasl.oauthbearer.token.endpoint.url: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/token
+
+    # Schema Registry configuration for Avro serialization/deserialization
+    schema.registry.url: "http://schemaregistry.kafka.svc.cluster.local:8081"
+    schema.registry.bearer.auth.credentials.source: "OAUTHBEARER"
+    schema.registry.bearer.auth.issuer.endpoint.url: "http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/token"
+    schema.registry.bearer.auth.client.id: "sa-shapes-flink"
+    schema.registry.bearer.auth.client.secret: "sa-shapes-flink-secret"
+    schema.registry.bearer.auth.scope: ""
+    schema.registry.bearer.auth.logical.cluster: ""
+    schema.registry.bearer.auth.identity.pool.id: ""
 
     # Consumer configuration
     kafka.consumer.group.id: shapes-autoscaler
