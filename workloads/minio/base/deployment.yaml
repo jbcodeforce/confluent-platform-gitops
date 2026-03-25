@@ -5,7 +5,7 @@ metadata:
   name: minio
   namespace: flink
   annotations:
-    argocd.argoproj.io/sync-wave: "15"
+    argocd.argoproj.io/sync-wave: "10"
   labels:
     app: minio
 spec:
