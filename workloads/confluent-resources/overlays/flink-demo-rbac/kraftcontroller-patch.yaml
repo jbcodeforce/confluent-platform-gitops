@@ -4,11 +4,10 @@
 # This patch consolidates all KRaft controller configuration including:
 # - Resource limits for local demo environment
 # - OAuth authentication for controller quorum communication
-# - RBAC authorization with MDS dependency
 # - JVM configuration for OAuth SASL mechanism
-# ==============================================================================
-# NOTE: RBAC requires MDS access for permission validation
-#       Controllers connect to broker MDS endpoint (not circular - different dependency type)
+# NOTE: Authorization intentionally omitted to avoid circular dependency with Kafka MDS.
+#       Controllers are an internal control plane — principals connecting to them (kafka brokers)
+#       are already super users. Fine-grained RBAC adds no practical security benefit here.
 # TODO: Issue #72 - Switch from OAuth to mTLS authentication when TLS is implemented
 # ==============================================================================
 apiVersion: platform.confluent.io/v1beta1
@@ -43,30 +42,6 @@ spec:
           expectedIssuer: https://keycloak.flink-demo-rbac.confluentdemo.local/realms/confluent
           jwksEndpointUri: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/certs
           subClaimName: client_id
-
-  # ==============================================================================
-  # AUTHORIZATION - RBAC with super users for control plane operations
-  # ==============================================================================
-  authorization:
-    type: rbac
-    superUsers:
-      - User:admin@osow.ski
-      - User:kafka
-      - User:kraftcontroller
-
-  # ==============================================================================
-  # DEPENDENCIES - MDS connection for RBAC permission validation
-  # ==============================================================================
-  dependencies:
-    mdsKafkaCluster:
-      # Connect to broker MDS endpoint (TOKEN listener on port 9073)
-      bootstrapEndpoint: kafka.kafka.svc.cluster.local:9073
-      authentication:
-        type: oauth
-        jaasConfig:
-          secretRef: kraft-oauth-client
-        oauthSettings:
-          tokenEndpointUri: http://keycloak.keycloak.svc.cluster.local:8080/realms/confluent/protocol/openid-connect/token
 
   # ==============================================================================
   # JVM CONFIGURATION - OAuth SASL mechanism
