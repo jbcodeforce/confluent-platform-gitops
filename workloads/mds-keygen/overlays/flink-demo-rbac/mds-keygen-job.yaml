@@ -1,6 +1,6 @@
 # MDS Token Keypair Generation Job
 # Generates RSA keypair for MDS authentication tokens
-# Runs as ArgoCD PreSync hook to ensure keys exist before Kafka starts
+# Runs as a standalone Application to decouple key generation from Confluent Resources sync
 ---
 # ServiceAccount for the keygen job
 apiVersion: v1
@@ -9,8 +9,7 @@ metadata:
   name: mds-keygen
   namespace: kafka
   annotations:
-    argocd.argoproj.io/sync-wave: "-10"
-    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-wave: "5"
 ---
 # Role to allow creating/updating the mds-token secret
 apiVersion: rbac.authorization.k8s.io/v1
@@ -19,8 +18,7 @@ metadata:
   name: mds-keygen
   namespace: kafka
   annotations:
-    argocd.argoproj.io/sync-wave: "-10"
-    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-wave: "5"
 rules:
   - apiGroups: [""]
     resources: ["secrets"]
@@ -38,8 +36,7 @@ metadata:
   name: mds-keygen
   namespace: kafka
   annotations:
-    argocd.argoproj.io/sync-wave: "-10"
-    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-wave: "5"
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -56,8 +53,8 @@ metadata:
   name: mds-keygen
   namespace: kafka
   annotations:
-    argocd.argoproj.io/sync-wave: "-9"
-    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-wave: "10"
+    argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
 spec:
   ttlSecondsAfterFinished: 300  # Clean up 5 minutes after completion
