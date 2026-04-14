@@ -36,7 +36,7 @@ alertmanager:
 # Grafana configuration for flink-demo-rbac
 grafana:
   # Override admin password (use sealed-secrets in production)
-  adminPassword: "admin-password"
+  adminPassword: "flink-demo-admin-password"
 
   # Persistence
   persistence:

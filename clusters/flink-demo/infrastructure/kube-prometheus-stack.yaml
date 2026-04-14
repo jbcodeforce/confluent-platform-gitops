@@ -18,6 +18,7 @@ spec:
         valueFiles:
           - $values/infrastructure/kube-prometheus-stack/base/values.yaml
           - $values/infrastructure/kube-prometheus-stack/overlays/flink-demo/values.yaml
+        ignoreMissingValueFiles: true
     - repoURL: https://github.com/osowski/confluent-platform-gitops.git
       targetRevision: HEAD
       ref: values
