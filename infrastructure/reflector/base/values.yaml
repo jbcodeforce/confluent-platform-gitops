@@ -14,11 +14,11 @@
 # Resource limits for homelab/demo cluster
 resources:
   limits:
-    cpu: 100m
-    memory: 128Mi
+    cpu: 250m
+    memory: 512Mi
   requests:
     cpu: 50m
-    memory: 64Mi
+    memory: 128Mi
 
 # Monitoring configuration
 serviceMonitor:

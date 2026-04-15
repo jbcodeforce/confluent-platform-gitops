@@ -26,7 +26,7 @@ spec:
   taskManager:
     resource:
       memory: 1048m
-      cpu: 1
+      cpu: 2
   job:
     jarURI: local:///opt/flink/usrlib/flink-agents-examples.jar
     entryClass: org.apache.flink.agents.examples.WorkflowSingleAgentExample
