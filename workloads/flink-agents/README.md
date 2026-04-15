@@ -47,9 +47,10 @@ Ollama runs as a Kubernetes Deployment in the `ollama` namespace, managed by Arg
 
 **Endpoint (default):** `http://ollama.ollama.svc.cluster.local:11434`
 
-### The performance constraint on macOS
-
-When running on Kind (Docker Desktop), Ollama runs inside a Linux VM. **Apple Silicon's GPU and Neural Engine are not accessible from inside the VM.** Inference is CPU-only regardless of the host hardware. This caps throughput significantly.
+> [!WARNING]
+> **The performance constraint on macOS**
+>
+> When running on Kind (Docker Desktop), Ollama runs inside a Linux VM. **Apple Silicon's GPU and Neural Engine are not accessible from inside the VM.** Inference is CPU-only regardless of the host hardware. This caps throughput significantly.
 
 ### Performance knobs (in-cluster)
 
