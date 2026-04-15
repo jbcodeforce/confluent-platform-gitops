@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.6.1] - 2026-04-15
+
 ### Added
 - **Flink Agents demo with Ollama LLM backend on flink-demo cluster** ([#163](https://github.com/osowski/confluent-platform-gitops/issues/163))
   - Deploys Flink Agents workflow and ReAct agent quickstarts as CMF-managed `FlinkApplication` resources, using Ollama as the local LLM backend
@@ -368,7 +370,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Workloads project: Namespace-scoped resources only
 - Secrets excluded from repository (external management)
 
-[Unreleased]: https://github.com/osowski/confluent-platform-gitops/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/osowski/confluent-platform-gitops/compare/v0.6.1...HEAD
+[0.6.1]: https://github.com/osowski/confluent-platform-gitops/compare/v0.6.0...v0.6.1
 [0.6.0]: https://github.com/osowski/confluent-platform-gitops/compare/v0.5.2...v0.6.0
 [0.5.2]: https://github.com/osowski/confluent-platform-gitops/compare/v0.5.1...v0.5.2
 [0.5.1]: https://github.com/osowski/confluent-platform-gitops/compare/v0.5.0...v0.5.1
