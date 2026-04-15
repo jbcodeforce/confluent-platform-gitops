@@ -11,5 +11,5 @@ resources:
   - flink-resources.yaml
   - namespaces.yaml
   - observability-resources.yaml
-  - ollama.yaml
+  #- ollama.yaml ## DISABLED temporarily in favor of running Ollama locally on MacBooks
   - workload-ingresses.yaml
