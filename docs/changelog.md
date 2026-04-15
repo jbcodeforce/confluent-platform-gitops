@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **Flink Agents demo with Ollama LLM backend on flink-demo cluster** ([#163](https://github.com/osowski/confluent-platform-gitops/issues/163))
+  - Deploys Flink Agents workflow and ReAct agent quickstarts as CMF-managed `FlinkApplication` resources, using Ollama as the local LLM backend
+  - `OLLAMA_ENDPOINT` and `OLLAMA_MODEL` are runtime-configurable via env vars; `ollama-host-mode` Kustomize component switches inference target between in-cluster and native macOS host
+
 ### Changed
 - Add Prometheus metrics reporter to `env1` ComputePool, consistent with Flink Application defaults and flink-demo-rbac compute pools.
 - Replaced s3proxy with MinIO in flink-demo cluster; adds reflector for secret distribution and MinIO console UI
