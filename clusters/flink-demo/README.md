@@ -130,14 +130,15 @@ Workload applications are defined in `workloads/kustomization.yaml`:
 
 - **namespaces** (wave 100) - Namespace definitions (kafka, flink, operator)
 - **cfk-operator** (wave 105) - Confluent for Kubernetes operator
-- **cmf-ingress** (wave 110) - Traefik IngressRoute for CMF API
+- **workload-ingresses** (wave 110) - Traefik IngressRoutes (CMF, Control Center, Schema Registry)
 - **confluent-resources** (wave 110) - Confluent Platform (KRaft, Kafka, Schema Registry, etc.) — **manual sync**
-- **controlcenter-ingress** (wave 115) - Traefik IngressRoute for Control Center UI
 - **cp-flink-sql-sandbox** (wave 115) - CP Flink SQL demo environment
 - **flink-kubernetes-operator** (wave 116) - Flink Kubernetes Operator
 - **observability-resources** (wave 117) - PodMonitors and Grafana dashboards
 - **cmf-operator** (wave 118) - Confluent Manager for Apache Flink
 - **flink-resources** (wave 120) - Flink integration resources — **manual sync**
+- **flink-agents** (wave 121) - Flink Agents workflow demo (LLM-driven review analysis) — **manual sync** — see [Flink Agents README](../../workloads/flink-agents/README.md)
+- **ollama** (wave 110) - In-cluster Ollama LLM backend — **disabled** (run Ollama natively on macOS instead; see [Flink Agents README](../../workloads/flink-agents/README.md))
 
 ## Environment Access
 
