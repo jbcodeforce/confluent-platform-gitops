@@ -93,7 +93,7 @@ Running Ollama natively on macOS gives access to Apple Silicon's GPU via Metal. 
 
 ```bash
 brew install ollama
-ollama serve          # starts on :11434, uses Metal automatically on Apple Silicon
+brew services run ollama # starts on :11434, uses Metal automatically on Apple Silicon
 ollama pull qwen3:8b  # or whichever model is configured (see Model section)
 ```
 
