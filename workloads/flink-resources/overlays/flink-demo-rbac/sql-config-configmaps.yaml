@@ -27,7 +27,7 @@ data:
           },
           "connectionSecretId": "kafka-conn-secret-id-shapes"
         },
-        "alterEnvironments": [
+        "ddlEnvironments": [
           "shapes-env"
         ]
       }
@@ -51,7 +51,7 @@ data:
         "type": "DEDICATED",
         "clusterSpec": {
           "flinkVersion": "v1_19",
-          "image": "confluentinc/cp-flink-sql:1.19-cp5",
+          "image": "confluentinc/cp-flink-sql:1.19-cp7",
           "flinkConfiguration": {
             "taskmanager.numberOfTaskSlots": "2",
             "metrics.reporter.prom.factory.class": "org.apache.flink.metrics.prometheus.PrometheusReporterFactory",
@@ -143,7 +143,7 @@ data:
           },
           "connectionSecretId": "kafka-conn-secret-id-colors"
         },
-        "alterEnvironments": [
+        "ddlEnvironments": [
           "colors-env"
         ]
       }
@@ -167,7 +167,7 @@ data:
         "type": "DEDICATED",
         "clusterSpec": {
           "flinkVersion": "v1_19",
-          "image": "confluentinc/cp-flink-sql:1.19-cp5",
+          "image": "confluentinc/cp-flink-sql:1.19-cp7",
           "flinkConfiguration": {
             "taskmanager.numberOfTaskSlots": "2",
             "metrics.reporter.prom.factory.class": "org.apache.flink.metrics.prometheus.PrometheusReporterFactory",
