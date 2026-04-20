@@ -17,7 +17,7 @@ locals {
 
   # cflt_keep_until is computed at apply time — cannot be a variable default
   mandatory_tags = merge(var.common_tags, {
-    cflt_keep_until = formatdate("YYYY-MM-DD", timeadd(timestamp(), "8766h"))
+    cflt_keep_until = formatdate("YYYY-MM-DD", timeadd(plantimestamp(), "8766h"))
   })
 }
 
