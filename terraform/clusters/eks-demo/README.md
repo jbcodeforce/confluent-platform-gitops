@@ -90,7 +90,12 @@ kubectl get nodes
 
 To provision a second EKS cluster (e.g., `eks-prod`):
 
-1. Create `terraform/clusters/eks-prod/` by copying this directory
+1. Create `terraform/clusters/eks-prod/` by copying this directory:
+```bash
+  cp -r terraform/clusters/eks-demo terraform/clusters/eks-prod
+  rm -rf terraform/clusters/eks-prod/.terraform
+  rm -f terraform/clusters/eks-prod/.terraform.lock.hcl
+```
 2. Update `main.tf`: change the backend `key` to `eks-prod/terraform.tfstate`
 3. Update `terraform.tfvars` with cluster-specific values (`cluster_name`, `vpc_cidr`, sizing)
 4. Run `terraform init && terraform apply` from the new directory
