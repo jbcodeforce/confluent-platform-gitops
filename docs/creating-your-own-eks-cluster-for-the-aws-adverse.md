@@ -51,7 +51,7 @@ assume <your-role>
 Verify your session is active before proceeding:
 
 ```bash
-aws sts get-caller-identity
+aws sts get-caller-identity --region us-east-1
 ```
 
 Keep this session in mind throughout — the SSM tunnel in Part 2 will fail silently if your credentials expire while the tunnel is running.
@@ -178,6 +178,7 @@ In your first terminal, from `terraform/clusters/new-eks-cluster`:
 
 ```bash
 aws ssm start-session \
+  --region us-east-1 \
   --target $(terraform output -raw bastion_instance_id) \
   --document-name AWS-StartPortForwardingSession \
   --parameters '{"portNumber":["1080"],"localPortNumber":["1080"]}'

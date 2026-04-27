@@ -13,6 +13,7 @@ Choose your adoption path based on your goals:
 | Path | When to Use | Guide |
 |------|------------|-------|
 | 🚀 **Quick Start** | First time, want hands-on learning | [Getting Started for the Uninitiated](docs/getting-started-for-the-uninitiated.md) |
+| ☁️ **Provision EKS** | Need to create a new EKS cluster from scratch | [Creating Your Own EKS Cluster](docs/creating-your-own-eks-cluster-for-the-aws-adverse.md) |
 | 📚 **Strategic Overview** | Understand options before diving in | [Adoption Guide](docs/adoption-guide.md) |
 | 🏗️ **Deploy to Cluster** | Have existing Kubernetes cluster | [Cluster Onboarding](docs/cluster-onboarding.md) |
 | 🔧 **Customize** | Adapt infrastructure or workloads | [Adoption Guide - Customization](docs/adoption-guide.md#path-3-customize-infrastructure-components) |
@@ -114,6 +115,8 @@ confluent-platform-gitops/
 │           ├── kustomization.yaml  # Lists all workload apps
 │           └── *.yaml              # Workload Application manifests (9 apps)
 ├── scripts/                        # Automation scripts
+│   ├── new-cluster.sh              # Create a new cluster GitOps structure from templates
+│   ├── clone-cluster.sh            # Clone an existing cluster's GitOps configuration
 │   ├── prepare-release.sh          # Prepare changelog and version updates
 │   └── release.sh                  # Create and push git tags for releases
 ├── docs/                           # Documentation
@@ -145,6 +148,7 @@ confluent-platform-gitops/
 - [Adding Helm Workloads](docs/adding-helm-workloads.md) - Comprehensive guide for Helm-based deployments
 - [Bootstrap Procedure](docs/bootstrap-procedure.md) - Detailed bootstrap deployment steps
 - [Cluster Onboarding](docs/cluster-onboarding.md) - How to onboard new clusters
+- [Creating Your Own EKS Cluster](docs/creating-your-own-eks-cluster-for-the-aws-adverse.md) - End-to-end guide: Terraform provisioning → SSM tunnel → GitOps config → full stack deploy
 - [Feature Roadmap](docs/roadmap.md) - Future roadmap for feature development and repository evolution.
 - [Architecture Decision Records](adrs/) - Record of architectural decisions
 
@@ -152,6 +156,7 @@ confluent-platform-gitops/
 
 - **flink-demo** - Demo cluster for Confluent Platform for Apache Flink (flink-demo.confluentdemo.local)
 - **flink-demo-rbac** - Multi-tenant RBAC variant with Keycloak OAuth, MDS authorization, and group-based namespace isolation (flink-demo-rbac.confluentdemo.local)
+- **eks-demo** - EKS-based demo cluster on AWS, deployed under platform.dspdemos.com with private API endpoint and SSM tunnel access
 
 ## Current Applications
 
